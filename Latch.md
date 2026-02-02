@@ -36,3 +36,30 @@ Build a small but complete backend application that demonstrates security-first 
 
 The initial application should include a practical resource-management domain, such as a secure workspace and task API, so that permissions and data relationships can be tested against real workflows.
 
+### 2.1 Required capabilities
+
+| Capability | Required behavior |
+|---|---|
+| Authentication | Secure registration, login, logout, and session validation |
+| Authorization | Centralized permission checks for protected operations |
+| Request validation | Runtime validation of all untrusted inputs |
+| API design | Versioned, documented REST endpoints |
+| PostgreSQL access | Explicit, safe SQL through a controlled data-access layer |
+| Database integrity | Foreign keys, unique constraints, checks, and indexes |
+| Transaction management | Atomic execution of related operations |
+| Error handling | Consistent, safe API errors |
+| Session security | Expiration, invalidation, and appropriate cookie settings |
+| Access isolation | Prevent unauthorized access to other users' resources |
+| Concurrency | Detect conflicting updates where required |
+| Logging | Structured operational logs without secrets |
+| Testing | Unit, integration, authorization, and end-to-end tests |
+| Documentation | Setup guide, schema, permission policy, and OpenAPI specification |
+
+### 2.2 Non-goals
+
+The initial release does not need a complex microservice architecture, a custom authentication protocol, a custom cryptographic implementation, or an elaborate user interface.
+
+Do not build a custom password-hashing algorithm, implement a proprietary session-token format without need, or introduce an ORM merely to hide important SQL behavior from developers.
+
+The objective is to understand and implement the boundaries between HTTP, application logic, authentication, authorization, SQL, and PostgreSQL.
+
