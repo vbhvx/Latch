@@ -63,3 +63,78 @@ Do not build a custom password-hashing algorithm, implement a proprietary sessio
 
 The objective is to understand and implement the boundaries between HTTP, application logic, authentication, authorization, SQL, and PostgreSQL.
 
+## 3. Recommended Technical Stack
+
+Use a TypeScript-first backend and a direct PostgreSQL connection through a maintained driver.
+
+| Layer | Recommended technology |
+|---|---|
+| Language | TypeScript |
+| Runtime | Node.js |
+| HTTP framework | Fastify or Express |
+| Database | PostgreSQL |
+| Database driver | `pg` (`node-postgres`) |
+| Request validation | Zod |
+| Password hashing | Argon2id or an appropriately configured bcrypt implementation |
+| Authentication | Maintained authentication library or secure server-managed sessions |
+| Session storage | PostgreSQL or another appropriate durable store |
+| API documentation | OpenAPI 3.x |
+| Unit and integration testing | Vitest or Jest |
+| HTTP integration testing | Fastify inject, Supertest, or an equivalent supported client |
+| End-to-end testing | Playwright where a browser interface exists |
+| Database migrations | A maintained migration tool or reviewed SQL migration files |
+| Local infrastructure | Docker Compose where useful |
+| CI/CD | The existing repository's continuous integration platform |
+
+Use direct SQL with the PostgreSQL driver for the core data-access implementation. The application should make SQL queries, constraints, and transaction boundaries understandable rather than hiding them behind a general-purpose ORM.
+
+A frontend is optional for the initial backend foundation. A small interface or API client may be added later to demonstrate authentication and protected workflows.
+
+## 4. Architecture
+
+Separate the HTTP layer, validation, authentication, authorization, business logic, and SQL access so each responsibility can be tested independently.
+
+```text
+Client / API Consumer
+         |
+         v
+     HTTP Server
+         |
+         v
+ Request Parsing and Validation
+         |
+         v
+ Authentication / Session Validation
+         |
+         v
+   Authorization Policies
+         |
+         v
+    Business Services
+         |
+         v
+     Data-Access Layer
+         |
+         v
+   Parameterized SQL
+         |
+         v
+      PostgreSQL
+         |
+         v
+ Constraints, Transactions,
+ Indexes, and Persistent Data
+```
+
+Cross-cutting components:
+
+- Centralized error handling
+- Structured logging and request IDs
+- Rate limiting
+- Session management
+- Database migrations
+- API documentation
+- Automated tests
+- Health checks
+- Secret and environment configuration
+
