@@ -138,3 +138,25 @@ Cross-cutting components:
 - Health checks
 - Secret and environment configuration
 
+### Architecture rules
+
+**HTTP handlers** should translate HTTP requests into validated application operations and documented responses.
+
+**Validation schemas** should define the accepted structure and constraints of each operation.
+
+**Authentication middleware** should establish the authenticated identity.
+
+**Authorization policies** should determine whether the current identity can perform a specific operation on a specific resource.
+
+**Application services** should implement business rules and coordinate related operations.
+
+**Data-access functions** should encapsulate parameterized SQL and mapping between database rows and application models.
+
+**PostgreSQL** should enforce important data invariants that must remain true regardless of which API route is used.
+
+Do not combine all these responsibilities into one large route handler. Do not duplicate slightly different authorization checks across unrelated endpoints.
+
+## 5. Define the Security Model First
+
+Before implementing application features, define the identities, resources, permissions, and trust boundaries.
+
