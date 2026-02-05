@@ -160,3 +160,57 @@ Do not combine all these responsibilities into one large route handler. Do not d
 
 Before implementing application features, define the identities, resources, permissions, and trust boundaries.
 
+### 5.1 Trust boundaries
+
+Treat all client-controlled inputs as untrusted, including:
+
+- URL parameters
+- Query parameters
+- Request bodies
+- Request headers other than those validated by the server
+- Cookie values before session validation
+- Resource identifiers
+- Role names
+- Organization or workspace identifiers
+- Values read from external systems
+
+A value supplied by the client can identify a requested resource, but it cannot establish that the caller is allowed to access that resource.
+
+For example, changing `/api/v1/tasks/task_123` to `/api/v1/tasks/task_456` must not grant access to another user's task.
+
+### 5.2 Authentication versus authorization
+
+Authentication answers:
+
+**Who is making this request?**
+
+Authorization answers:
+
+**Is that identity permitted to perform this operation on this resource in its current state?**
+
+Validation answers:
+
+**Does this request contain acceptable data?**
+
+Database integrity answers:
+
+**Can this operation preserve the invariants that must remain true in persistent storage?**
+
+These are different controls and should not be treated as substitutes for one another.
+
+### 5.3 Initial roles
+
+For the initial application, support a simple user-owned resource model, optionally extended with workspace membership.
+
+Example roles:
+
+| Role | Purpose |
+|---|---|
+| Owner | Manage all resources and settings within the permitted scope |
+| Member | Perform permitted operations on assigned or accessible resources |
+| Viewer | Read permitted resources without modifying them |
+
+Define each operation's permissions explicitly.
+
+Avoid writing a policy such as "members can update resources" without determining whether it means all resources, their own resources, assigned resources, or resources in a shared workspace.
+
