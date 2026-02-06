@@ -214,3 +214,31 @@ Define each operation's permissions explicitly.
 
 Avoid writing a policy such as "members can update resources" without determining whether it means all resources, their own resources, assigned resources, or resources in a shared workspace.
 
+## 6. PostgreSQL Data Model
+
+Use a relational model that expresses ownership and important business constraints clearly.
+
+### 6.1 Users
+
+Create a `users` table with fields such as:
+
+- `id`
+- `email`
+- `display_name`
+- `password_hash`, if passwords are managed locally
+- `status`
+- `created_at`
+- `updated_at`
+
+Requirements:
+
+- Use a stable primary key.
+- Enforce appropriate email uniqueness.
+- Normalize email handling according to a documented policy.
+- Never store plaintext passwords.
+- Never expose password hashes in ordinary API responses.
+- Use appropriate database types and constraints.
+- Avoid using email address alone as a permanent reference for all business relationships.
+
+If authentication is delegated to an identity provider, model the provider identity appropriately instead of implementing a second, unnecessary password system.
+
