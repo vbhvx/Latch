@@ -242,3 +242,40 @@ Requirements:
 
 If authentication is delegated to an identity provider, model the provider identity appropriately instead of implementing a second, unnecessary password system.
 
+### 6.2 Sessions
+
+For a server-managed session approach, create a `sessions` table with fields such as:
+
+- `id`
+- `user_id`
+- `token_hash`
+- `expires_at`
+- `created_at`
+- `last_seen_at`
+- `revoked_at`
+
+Store only a hash of the usable session token when implementing opaque bearer sessions. Generate tokens with a cryptographically secure random generator.
+
+Enforce appropriate foreign keys and indexes for session lookup and expiration cleanup.
+
+Do not store reusable session secrets in application logs or return them from session-inspection endpoints.
+
+### 6.3 Resources
+
+Use a concrete domain entity, such as `tasks`, to demonstrate ownership and authorization.
+
+Proposed fields:
+
+- `id`
+- `owner_id`
+- `workspace_id`, if shared workspaces are included
+- `title`
+- `description`
+- `status`
+- `created_at`
+- `updated_at`
+- `version`
+- `deleted_at`, if soft deletion is implemented
+
+The resource should have a documented lifecycle and a clear authorization policy.
+
