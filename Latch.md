@@ -317,3 +317,20 @@ Examples:
 
 For example, a task status could be constrained to supported initial values. If the application supports configurable statuses, model that relationship explicitly rather than hard-coding a fixed check constraint that contradicts the product's requirements.
 
+### 6.6 Database naming and conventions
+
+Adopt consistent conventions:
+
+- `snake_case` for PostgreSQL identifiers.
+- `created_at` and `updated_at` for timestamps.
+- `uuid` or another deliberate primary-key type.
+- Explicit foreign-key names where useful.
+- UTC-aware timestamps, normally using `timestamptz` for event times.
+- Documented handling of nullable fields.
+
+Do not mix timezone-naive timestamps and timezone-aware timestamps without a clear reason.
+
+## 7. PostgreSQL Connections and Query Safety
+
+Direct database access requires disciplined query construction and transaction management.
+
