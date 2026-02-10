@@ -279,3 +279,41 @@ Proposed fields:
 
 The resource should have a documented lifecycle and a clear authorization policy.
 
+### 6.4 Workspace membership, if applicable
+
+A shared-workspace model may include:
+
+**Workspaces**
+
+- `id`
+- `name`
+- `created_by`
+- `created_at`
+- `updated_at`
+
+**WorkspaceMemberships**
+
+- `workspace_id`
+- `user_id`
+- `role`
+- `created_at`
+
+Enforce uniqueness on `(workspace_id, user_id)` and use foreign keys to preserve valid relationships.
+
+Do not add a workspace model unless the application actually needs shared ownership. The security foundation must remain understandable.
+
+### 6.5 Database constraints
+
+Use PostgreSQL to protect important invariants.
+
+Examples:
+
+- `NOT NULL` for required values.
+- `UNIQUE` for unique identifiers and memberships.
+- `FOREIGN KEY` for valid relationships.
+- `CHECK` for supported values and quantity constraints.
+- Appropriate defaults for server-generated timestamps.
+- Indexes for frequently filtered and joined fields.
+
+For example, a task status could be constrained to supported initial values. If the application supports configurable statuses, model that relationship explicitly rather than hard-coding a fixed check constraint that contradicts the product's requirements.
+
