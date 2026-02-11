@@ -334,3 +334,74 @@ Do not mix timezone-naive timestamps and timezone-aware timestamps without a cle
 
 Direct database access requires disciplined query construction and transaction management.
 
+### 7.1 Connection pooling
+
+Use a maintained PostgreSQL driver and a controlled connection pool.
+
+Configure:
+
+- Maximum pool size
+- Connection timeout
+- Idle connection handling
+- Statement or query timeout where appropriate
+- Application shutdown behavior
+- Error handling for connection failures
+
+The pool should be sized according to the application and database capacity. Do not allow unbounded connections or create a new database connection for every request.
+
+### 7.2 Parameterized SQL
+
+All values derived from user input must be passed as parameters rather than concatenated into SQL strings.
+
+Example with `pg`:
+
+```typescript
+const result = await pool.query(
+  `
+    SELECT id, owner_id, title, status, created_at
+    FROM tasks
+    WHERE id = $1
+      AND owner_id = $2
+      AND deleted_at IS NULL
+  `,
+  [taskId, currentUser.id]
+);
+```
+
+The query is parameterized, and the access scope is expressed in the query itself.
+
+Never build a query like this:
+
+```typescript
+// Unsafe: untrusted input is inserted into SQL.
+const sql = `SELECT * FROM tasks WHERE id = '${taskId}'`;
+```
+
+Parameterization prevents user-controlled values from being interpreted as SQL syntax. It does not automatically solve authorization, input validation, or all dynamic-query problems.
+
+### 7.3 Dynamic column names and sorting
+
+SQL parameters represent values, not arbitrary table or column identifiers.
+
+For sorting or selecting from an allowed set of fields, use a server-controlled allowlist.
+
+```typescript
+const sortColumns = {
+  createdAt: "created_at",
+  title: "title",
+  status: "status"
+} as const;
+
+type SortField = keyof typeof sortColumns;
+
+function getSortColumn(value: string): string {
+  if (Object.hasOwn(sortColumns, value)) {
+    return sortColumns[value as SortField];
+  }
+
+  throw new Error("Unsupported sort field");
+}
+```
+
+Only a validated entry from the predefined allowlist should be interpolated into SQL. Client-provided arbitrary column names, directions, table names, or expressions must never be inserted directly.
+
