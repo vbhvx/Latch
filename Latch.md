@@ -405,3 +405,19 @@ function getSortColumn(value: string): string {
 
 Only a validated entry from the predefined allowlist should be interpolated into SQL. Client-provided arbitrary column names, directions, table names, or expressions must never be inserted directly.
 
+### 7.4 Avoid unnecessary over-fetching
+
+Select the fields needed by the operation rather than always returning `SELECT *`.
+
+Benefits include:
+
+- Less accidental exposure of sensitive fields.
+- More explicit data contracts.
+- Reduced data transfer.
+- Easier schema evolution.
+- Clearer authorization review.
+
+Password hashes, session data, and internal authorization metadata should not be included in ordinary resource queries unless the operation genuinely needs them.
+
+## 8. Authentication Implementation
+
