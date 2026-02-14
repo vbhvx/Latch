@@ -421,3 +421,24 @@ Password hashes, session data, and internal authorization metadata should not be
 
 ## 8. Authentication Implementation
 
+### 8.1 Preferred approach
+
+Use a maintained authentication library or an established identity provider when appropriate.
+
+The application must still enforce server-side authentication and authorization even if the authentication library handles password verification or session management.
+
+Do not implement custom cryptography or invent a token protocol.
+
+### 8.2 Local account authentication
+
+If local password authentication is required:
+
+- Hash passwords using Argon2id or a securely configured alternative.
+- Verify passwords using the selected library.
+- Use rate limits on authentication attempts.
+- Avoid account-enumeration leaks through error messages.
+- Never log passwords or password hashes.
+- Support logout and session invalidation.
+- Apply a password-reset workflow if that feature is included.
+- Avoid rolling your own password-storage format.
+
