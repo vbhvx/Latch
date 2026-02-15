@@ -442,3 +442,32 @@ If local password authentication is required:
 - Apply a password-reset workflow if that feature is included.
 - Avoid rolling your own password-storage format.
 
+### 8.3 Browser session security
+
+For a browser-based application, prefer server-managed sessions with appropriately configured cookies.
+
+Set relevant protections such as:
+
+- `HttpOnly`
+- `Secure` in HTTPS deployments
+- Appropriate `SameSite` behavior
+- An appropriate cookie path and lifetime
+
+Choose CSRF protection based on the authentication architecture and the browser's cross-origin behavior.
+
+Do not put long-lived session credentials into browser local storage merely for convenience.
+
+### 8.4 Session lifecycle
+
+Test:
+
+- Successful login creates an authenticated session.
+- Invalid credentials are rejected.
+- Logout invalidates the session.
+- Expired sessions cannot access protected endpoints.
+- Revoked sessions are rejected.
+- Session lookup cannot authenticate a user solely from an unverified cookie value.
+- Deactivated users are handled according to the defined policy.
+
+If JWT-based authentication is chosen instead, document token expiration, signature verification, key management, refresh-token behavior, revocation strategy, and where JWTs are stored. Do not assume JWTs eliminate the need for authorization checks.
+
