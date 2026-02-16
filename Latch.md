@@ -471,3 +471,20 @@ Test:
 
 If JWT-based authentication is chosen instead, document token expiration, signature verification, key management, refresh-token behavior, revocation strategy, and where JWTs are stored. Do not assume JWTs eliminate the need for authorization checks.
 
+## 9. Authorization Architecture
+
+Authorization must be centralized, explicit, and testable.
+
+### 9.1 Permission policies
+
+Define policies such as:
+
+- `canCreateTask`
+- `canReadTask`
+- `canUpdateTask`
+- `canDeleteTask`
+- `canManageWorkspace`
+- `canManageMembership`
+
+Each policy should consider the authenticated identity, resource ownership, workspace membership, role, and relevant resource state.
+
