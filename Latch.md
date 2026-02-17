@@ -488,3 +488,48 @@ Define policies such as:
 
 Each policy should consider the authenticated identity, resource ownership, workspace membership, role, and relevant resource state.
 
+### 9.2 Resource-scoped queries
+
+Whenever possible, scope protected queries to the authorized user or workspace.
+
+For example:
+
+```typescript
+const result = await pool.query(
+  `
+    SELECT id, owner_id, title, status, created_at, updated_at
+    FROM tasks
+    WHERE id = $1
+      AND owner_id = $2
+      AND deleted_at IS NULL
+  `,
+  [taskId, currentUser.id]
+);
+```
+
+This pattern helps prevent accidental reads that retrieve an arbitrary record before authorization is checked.
+
+For workspace-owned resources, validate both the workspace scope and the current user's membership.
+
+### 9.3 Update authorization
+
+An update must verify authorization at the point the mutation is performed.
+
+Do not rely only on a previous frontend check or an earlier API request because permissions or resource state may have changed.
+
+For sensitive operations, consider combining the relevant ownership or version check with the database mutation itself.
+
+### 9.4 Prevent privilege escalation
+
+Never trust a client-supplied role field such as:
+
+```json
+{
+  "role": "admin"
+}
+```
+
+A role update must be a distinct, authorized operation with explicit policy enforcement.
+
+Ordinary resource-creation and update endpoints must not allow a caller to change their `owner_id`, `workspace_id`, role, or other server-controlled fields unless the operation is specifically authorized to do so.
+
