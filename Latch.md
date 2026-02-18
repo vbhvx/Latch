@@ -533,3 +533,15 @@ A role update must be a distinct, authorized operation with explicit policy enfo
 
 Ordinary resource-creation and update endpoints must not allow a caller to change their `owner_id`, `workspace_id`, role, or other server-controlled fields unless the operation is specifically authorized to do so.
 
+### 9.5 Not-found versus forbidden
+
+For inaccessible resources, decide whether the API should return `403 Forbidden` or intentionally return `404 Not Found` to avoid revealing resource existence.
+
+Apply the policy consistently and test it.
+
+A `404` response does not itself prevent unauthorized access; the authorization check and query scope must still be correct.
+
+## 10. Input Validation
+
+Validate all untrusted inputs at the API boundary, even when the frontend performs identical checks.
+
