@@ -585,3 +585,26 @@ The specific field limits and status values are initial design decisions and sho
 
 Use strict schemas for write operations where unexpected fields should be rejected rather than silently accepted.
 
+### 10.3 Separate validation from authorization
+
+A request may be valid but unauthorized.
+
+For example, a correctly formed request to modify another user's resource should still be denied.
+
+Likewise, an authorized user can submit an invalid status or an excessively large field. Authorization does not make that input valid.
+
+Test both cases independently.
+
+### 10.4 Semantic validation
+
+Some rules need more than schema validation:
+
+- A workspace must exist.
+- The caller must belong to the workspace.
+- A task status transition must be permitted.
+- A referenced resource must be in the correct state.
+- A unique value must not already exist.
+- The operation must not violate a cross-record invariant.
+
+Implement these checks in the appropriate service and transaction boundary, with database constraints supporting the invariants where practical.
+
