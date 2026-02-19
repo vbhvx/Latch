@@ -545,3 +545,43 @@ A `404` response does not itself prevent unauthorized access; the authorization 
 
 Validate all untrusted inputs at the API boundary, even when the frontend performs identical checks.
 
+### 10.1 Validation categories
+
+Validate:
+
+- Request body structure
+- Path parameters
+- Query parameters
+- Identifier formats
+- Required fields
+- String length
+- Enum values
+- Numeric ranges
+- Date and timestamp formats
+- Pagination limits
+- Sorting allowlists
+- Resource relationships
+- State transitions
+- Request body size
+
+### 10.2 Example schema
+
+Using Zod:
+
+```typescript
+import { z } from "zod";
+
+export const createTaskSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  description: z.string().max(10_000).nullable().optional(),
+  status: z.enum(["todo", "in_progress", "done"])
+}).strict();
+
+export type CreateTaskInput =
+  z.infer<typeof createTaskSchema>;
+```
+
+The specific field limits and status values are initial design decisions and should be aligned with the actual application requirements.
+
+Use strict schemas for write operations where unexpected fields should be rejected rather than silently accepted.
+
