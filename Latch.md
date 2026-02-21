@@ -608,3 +608,16 @@ Some rules need more than schema validation:
 
 Implement these checks in the appropriate service and transaction boundary, with database constraints supporting the invariants where practical.
 
+## 11. API Design
+
+Expose a consistent API under `/api/v1`.
+
+### 11.1 Authentication endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/v1/auth/register` | Register an account, if self-registration is supported |
+| POST | `/api/v1/auth/login` | Authenticate and establish a session |
+| POST | `/api/v1/auth/logout` | Invalidate the current session |
+| GET | `/api/v1/me` | Retrieve the authenticated user's profile |
+
