@@ -621,3 +621,41 @@ Expose a consistent API under `/api/v1`.
 | POST | `/api/v1/auth/logout` | Invalidate the current session |
 | GET | `/api/v1/me` | Retrieve the authenticated user's profile |
 
+### 11.2 Resource endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/v1/tasks` | List authorized tasks |
+| POST | `/api/v1/tasks` | Create a task |
+| GET | `/api/v1/tasks/:taskId` | Retrieve an authorized task |
+| PATCH | `/api/v1/tasks/:taskId` | Update permitted task fields |
+| DELETE | `/api/v1/tasks/:taskId` | Delete or archive a task according to policy |
+
+### 11.3 Workspace endpoints, if implemented
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/v1/workspaces` | List accessible workspaces |
+| POST | `/api/v1/workspaces` | Create a workspace |
+| GET | `/api/v1/workspaces/:workspaceId` | Retrieve an authorized workspace |
+| PATCH | `/api/v1/workspaces/:workspaceId` | Update permitted workspace fields |
+| GET | `/api/v1/workspaces/:workspaceId/members` | List authorized memberships |
+
+Treat these as proposed logical contracts. Only document and expose operations implemented and tested in the actual application.
+
+### 11.4 API contract requirements
+
+Every endpoint must specify:
+
+- Authentication requirements
+- Authorization policy
+- Path and query parameters
+- Request schema
+- Successful response schema
+- Validation error behavior
+- Authentication and permission error behavior
+- Missing-resource behavior
+- Pagination and sorting rules
+- Relevant state-transition constraints
+- Idempotency expectations where applicable
+
