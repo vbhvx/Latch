@@ -659,3 +659,42 @@ Every endpoint must specify:
 - Relevant state-transition constraints
 - Idempotency expectations where applicable
 
+### 11.5 Request handling pipeline
+
+Use a consistent processing pipeline:
+
+1. Parse the request.
+2. Validate the basic request structure.
+3. Authenticate the caller where required.
+4. Validate the relevant resource identifiers.
+5. Evaluate the required authorization policy.
+6. Execute the application operation.
+7. Commit the database transaction where applicable.
+8. Return a documented response.
+
+A server may reject malformed requests before authentication, but it must not reveal protected resource information through validation errors.
+
+### 11.6 Error response
+
+Use a consistent error format, for example:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The request contains invalid fields.",
+    "details": [
+      {
+        "field": "title",
+        "code": "TOO_SHORT"
+      }
+    ],
+    "requestId": "req_example"
+  }
+}
+```
+
+Use stable error codes, appropriate HTTP status codes, and sanitized messages.
+
+Do not return SQL statements, database connection strings, stack traces, secrets, or raw internal exceptions.
+
