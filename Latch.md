@@ -698,3 +698,22 @@ Use stable error codes, appropriate HTTP status codes, and sanitized messages.
 
 Do not return SQL statements, database connection strings, stack traces, secrets, or raw internal exceptions.
 
+### 11.7 API documentation
+
+Maintain an OpenAPI 3.x specification containing:
+
+- Authentication scheme
+- Endpoints and methods
+- Request and response schemas
+- Error contracts
+- Authorization requirements
+- Pagination conventions
+- Validation limits
+- Example requests and responses
+
+Where practical, validate the specification in CI and test the implementation against the same schemas.
+
+## 12. Database Integrity and Transaction Management
+
+This is one of the most important engineering components of the project.
+
