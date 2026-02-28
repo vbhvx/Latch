@@ -717,3 +717,31 @@ Where practical, validate the specification in CI and test the implementation ag
 
 This is one of the most important engineering components of the project.
 
+### 12.1 Use constraints as a second line of defense
+
+Implement appropriate foreign keys, uniqueness constraints, check constraints, and not-null requirements.
+
+For example:
+
+- Every task must reference a valid owner.
+- A membership pair must be unique.
+- A task status must be supported.
+- A resource must not reference a nonexistent workspace.
+- A unique application identifier must not be duplicated.
+
+Application-level validation improves error messages; database constraints protect the persistent state even when application logic has a defect or an operation races with another request.
+
+### 12.2 When transactions are required
+
+Use PostgreSQL transactions when a business operation involves multiple changes that must remain consistent.
+
+Examples:
+
+- Creating a resource and its mandatory audit event.
+- Changing an owner and recording the required ownership history.
+- Creating a workspace and assigning its initial Owner.
+- Updating a resource and its related records.
+- Checking and consuming a limited resource under concurrent requests.
+
+A transaction should succeed completely or roll back completely where the operation requires atomicity.
+
