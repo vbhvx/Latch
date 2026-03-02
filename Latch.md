@@ -745,3 +745,69 @@ Examples:
 
 A transaction should succeed completely or roll back completely where the operation requires atomicity.
 
+### 12.3 Transaction example
+
+```typescript
+import type { Pool } from "pg";
+
+interface CreateTaskInput {
+  title: string;
+  status: "todo" | "in_progress" | "done";
+}
+
+export async function createTask(
+  pool: Pool,
+  ownerId: string,
+  input: CreateTaskInput
+) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const taskResult = await client.query(
+      `
+        INSERT INTO tasks (owner_id, title, status)
+        VALUES ($1, $2, $3)
+        RETURNING id, owner_id, title, status, created_at
+      `,
+      [ownerId, input.title, input.status]
+    );
+
+    const task = taskResult.rows[0];
+
+    await client.query(
+      `
+        INSERT INTO audit_events (
+          actor_id,
+          action,
+          resource_type,
+          resource_id
+        )
+        VALUES ($1, $2, $3, $4)
+      `,
+      [ownerId, "task.created", "task", task.id]
+    );
+
+    await client.query("COMMIT");
+
+    return task;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+```
+
+This is illustrative code; adapt the columns, input validation, error mapping, and audit requirements to the implemented schema.
+
+Every query within a transaction must use the same checked-out database client. Do not issue transactional queries through the shared pool and assume they belong to the same transaction.
+
+### 12.4 Transaction limitations
+
+Do not keep database transactions open while waiting on slow external services or user interaction.
+
+External calls cannot be rolled back by a PostgreSQL transaction. For operations spanning database state and external services, use explicit state transitions, idempotency, and reconciliation instead of pretending the whole workflow is atomic.
+
