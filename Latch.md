@@ -811,3 +811,29 @@ Do not keep database transactions open while waiting on slow external services o
 
 External calls cannot be rolled back by a PostgreSQL transaction. For operations spanning database state and external services, use explicit state transitions, idempotency, and reconciliation instead of pretending the whole workflow is atomic.
 
+### 12.5 Isolation and concurrency
+
+Understand when an ordinary transaction is sufficient and when stronger concurrency control is needed.
+
+Use approaches such as:
+
+- Conditional updates
+- Row-level locks
+- Unique constraints
+- Optimistic version checks
+- Suitable transaction isolation
+
+For example, an update that should succeed only when a task remains at a specific version can include the expected version in its `WHERE` clause. If no row is affected, return a documented conflict response.
+
+Do not assume that two separate `SELECT` and `UPDATE` statements are race-free merely because they are executed close together.
+
+## 13. PostgreSQL Row-Level Security
+
+PostgreSQL Row-Level Security (RLS) can provide an additional layer of data isolation when implemented carefully.
+
+### 13.1 When to consider RLS
+
+Consider RLS when the application has organization-scoped or user-scoped tables and the database architecture can reliably establish the security context of each operation.
+
+Policies can restrict which rows are visible or modifiable under a defined database session context.
+
