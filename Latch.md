@@ -837,3 +837,27 @@ Consider RLS when the application has organization-scoped or user-scoped tables 
 
 Policies can restrict which rows are visible or modifiable under a defined database session context.
 
+### 13.2 Implementation requirements
+
+If RLS is used:
+
+- Enable it explicitly on the relevant tables.
+- Define and review policies for reads, inserts, updates, and deletes.
+- Understand the behavior of table owners, superusers, and roles with `BYPASSRLS`.
+- Use `FORCE ROW LEVEL SECURITY` where the intended design requires applicable table owners to be subject to policies.
+- Use a runtime database role with the minimum required privileges.
+- Establish tenant context safely for each transaction.
+- Reset or isolate context when connections return to the pool.
+- Test missing, invalid, and deliberately changed tenant context.
+- Test background jobs and administrative operations separately.
+
+RLS does not automatically know which application user is authenticated. The application must establish the security context correctly.
+
+### 13.3 Connection pooling hazards
+
+If tenant information is stored in a PostgreSQL session setting, pooled connections may be reused.
+
+Use transaction-scoped settings where appropriate, and ensure that context cannot leak from one request to another.
+
+Avoid relying on session variables that remain set after a request unless the lifecycle is deliberately controlled and tested.
+
