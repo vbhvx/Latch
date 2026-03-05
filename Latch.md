@@ -861,3 +861,13 @@ Use transaction-scoped settings where appropriate, and ensure that context canno
 
 Avoid relying on session variables that remain set after a request unless the lifecycle is deliberately controlled and tested.
 
+### 13.4 Defense in depth
+
+Even with RLS enabled, keep application-level authorization checks and resource-scoped SQL.
+
+RLS is a second protection layer, not an excuse to omit permissions from the application architecture.
+
+Do not add RLS mechanically if the current connection or tenant-context model cannot support it safely. Document the decision and implement the strongest reliable alternative for the initial release.
+
+## 14. Logging, Errors, and Observability
+
