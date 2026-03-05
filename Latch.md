@@ -871,3 +871,32 @@ Do not add RLS mechanically if the current connection or tenant-context model ca
 
 ## 14. Logging, Errors, and Observability
 
+### 14.1 Structured logging
+
+Include useful operational fields such as:
+
+- Request ID
+- Route
+- HTTP method
+- Status code
+- Request duration
+- Error category
+- Relevant resource identifier where appropriate
+
+Do not log passwords, session tokens, authorization headers, raw database credentials, or unnecessarily sensitive request bodies.
+
+### 14.2 Error classification
+
+Distinguish between:
+
+- Validation failures
+- Authentication failures
+- Authorization failures
+- Missing resources
+- State conflicts
+- Database constraint violations
+- Transient database failures
+- Unexpected internal errors
+
+Map known errors to predictable HTTP responses without exposing internal implementation details.
+
