@@ -917,3 +917,42 @@ Provide appropriate operational endpoints such as:
 
 Do not expose database credentials, internal topology, or detailed sensitive diagnostics through public health endpoints.
 
+## 15. Testing Strategy
+
+The test suite must validate both successful behavior and attempts to bypass security or corrupt persistent state.
+
+### 15.1 Unit tests
+
+Test:
+
+- Runtime validation schemas
+- Permission policy functions
+- Business rules
+- State-transition validation
+- Error mapping
+- Pagination and sorting allowlists
+- Resource ownership decisions
+- Version-conflict logic
+
+Mock dependencies only where the test is intended to isolate the unit under test.
+
+### 15.2 PostgreSQL integration tests
+
+Use a real test PostgreSQL database or an isolated equivalent that verifies actual SQL behavior and database constraints.
+
+Test:
+
+- Database migrations
+- User and session persistence
+- Resource CRUD operations
+- Foreign-key violations
+- Uniqueness constraints
+- Check constraints
+- Transaction commit and rollback
+- Parameterized query behavior
+- Concurrency-sensitive updates
+- Connection-pool behavior
+- RLS policies where implemented
+
+Do not rely only on mocks when the objective is to verify SQL or PostgreSQL-specific behavior.
+
