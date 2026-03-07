@@ -900,3 +900,20 @@ Distinguish between:
 
 Map known errors to predictable HTTP responses without exposing internal implementation details.
 
+### 14.3 Database errors
+
+Do not return the raw PostgreSQL error to the client.
+
+Log a sanitized internal diagnostic with a request ID, map known constraint violations to appropriate responses, and return a stable error contract.
+
+For example, a unique-constraint conflict may produce a `409 Conflict` response where appropriate, but clients should not receive the underlying table or internal database details unless specifically intended by the API contract.
+
+### 14.4 Health and readiness
+
+Provide appropriate operational endpoints such as:
+
+- Liveness check: whether the process is running.
+- Readiness check: whether the application can serve requests and its critical dependencies are usable.
+
+Do not expose database credentials, internal topology, or detailed sensitive diagnostics through public health endpoints.
+
