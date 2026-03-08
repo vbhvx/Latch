@@ -956,3 +956,31 @@ Test:
 
 Do not rely only on mocks when the objective is to verify SQL or PostgreSQL-specific behavior.
 
+### 15.3 Authentication tests
+
+Verify:
+
+- Successful authentication.
+- Invalid credential handling.
+- Session expiry.
+- Session revocation.
+- Logout.
+- Access to protected routes.
+- Handling of disabled accounts.
+- Rejection of invalid session tokens.
+
+### 15.4 Authorization tests
+
+At minimum:
+
+1. A user can read their own permitted resources.
+2. A user cannot read another user's private resource.
+3. A user cannot update another user's private resource.
+4. A user cannot delete another user's private resource.
+5. Changing a resource ID cannot bypass access control.
+6. A user cannot elevate privileges through ordinary update endpoints.
+7. A Viewer cannot perform forbidden mutations.
+8. Workspace membership is verified on protected shared-resource operations.
+9. List and search endpoints do not leak inaccessible records.
+10. Unauthorized operations do not produce unintended database changes.
+
