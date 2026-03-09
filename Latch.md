@@ -984,3 +984,28 @@ At minimum:
 9. List and search endpoints do not leak inaccessible records.
 10. Unauthorized operations do not produce unintended database changes.
 
+### 15.5 SQL injection and input tests
+
+Verify that:
+
+- SQL-looking strings are treated as data.
+- Dynamic sorting accepts only allowlisted fields.
+- Malformed IDs are rejected according to the API contract.
+- Oversized inputs are rejected.
+- Unexpected fields cannot overwrite privileged state.
+- Invalid payloads do not cause partial database writes.
+- Query parameters cannot alter the intended SQL structure.
+
+Parameterized queries are essential, but tests must also verify safe construction of dynamic identifiers and correct authorization behavior.
+
+### 15.6 Transaction and concurrency tests
+
+Test:
+
+- A failure after the first write rolls back the complete operation.
+- Required audit records are not missing after a successful transaction.
+- Duplicate requests are handled according to the contract.
+- Concurrent updates do not silently overwrite protected state.
+- Unique constraints protect duplicate records under concurrency.
+- RLS context cannot leak between pooled connections if RLS is enabled.
+
