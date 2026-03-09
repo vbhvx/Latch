@@ -1009,3 +1009,24 @@ Test:
 - Unique constraints protect duplicate records under concurrency.
 - RLS context cannot leak between pooled connections if RLS is enabled.
 
+### 15.7 End-to-end API workflow
+
+A representative test sequence should:
+
+1. Create or provision two test users.
+2. Authenticate both users.
+3. Create a resource as User A.
+4. Retrieve it as User A.
+5. Attempt to retrieve it as User B.
+6. Attempt to modify it as User B.
+7. Verify that both unauthorized operations are rejected.
+8. Verify that the database record remains unchanged.
+9. Log out User A and verify that the revoked session cannot read the resource.
+10. Confirm that error responses match the documented API contract.
+
+This demonstrates more than a route returning `401` or `403`: it proves that unauthorized actions cannot change protected state.
+
+## 16. API Documentation and Security Documentation
+
+Maintain these documents as part of the project:
+
