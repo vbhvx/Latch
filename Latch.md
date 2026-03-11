@@ -1038,3 +1038,15 @@ Document the application layers, trust boundaries, database interaction model, a
 
 Document the selected authentication mechanism, session lifecycle, expiration, logout, and relevant cookie or token security controls.
 
+### `docs/authorization-matrix.md`
+
+List each protected operation and the roles or resource relationships that permit or deny it.
+
+### `docs/database-schema.md`
+
+Describe each table, its relationships, required fields, constraints, and indexes.
+
+### `docs/sql-safety.md`
+
+Explain parameterized SQL, safe dynamic sorting, database privileges, transaction usage, and the limits of input validation.
+
