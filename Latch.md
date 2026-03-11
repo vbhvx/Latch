@@ -1030,3 +1030,11 @@ This demonstrates more than a route returning `401` or `403`: it proves that una
 
 Maintain these documents as part of the project:
 
+### `docs/architecture.md`
+
+Document the application layers, trust boundaries, database interaction model, and transaction strategy.
+
+### `docs/authentication.md`
+
+Document the selected authentication mechanism, session lifecycle, expiration, logout, and relevant cookie or token security controls.
+
