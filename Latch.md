@@ -1050,3 +1050,11 @@ Describe each table, its relationships, required fields, constraints, and indexe
 
 Explain parameterized SQL, safe dynamic sorting, database privileges, transaction usage, and the limits of input validation.
 
+### `docs/api.md`
+
+Document API routes, schemas, success responses, error behavior, pagination, and authentication requirements. Generate or maintain an OpenAPI 3.x specification where practical.
+
+### `docs/testing.md`
+
+Explain how to provision the test database, run migrations, execute the test suites, and interpret the results.
+
