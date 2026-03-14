@@ -1058,3 +1058,72 @@ Document API routes, schemas, success responses, error behavior, pagination, and
 
 Explain how to provision the test database, run migrations, execute the test suites, and interpret the results.
 
+### `docs/threat-model.md`
+
+Describe major threats such as unauthorized resource access, SQL injection, session theft, privilege escalation, database credential exposure, and cross-tenant data leakage.
+
+## 17. Repository Structure
+
+Use a maintainable structure similar to the following:
+
+```text
+secure-api-foundation/
+├── src/
+│   ├── app.ts
+│   ├── server.ts
+│   ├── config/
+│   │   └── env.ts
+│   ├── routes/
+│   │   ├── auth.routes.ts
+│   │   ├── users.routes.ts
+│   │   ├── tasks.routes.ts
+│   │   └── workspaces.routes.ts
+│   ├── middleware/
+│   │   ├── authenticate.ts
+│   │   ├── authorize.ts
+│   │   ├── validate.ts
+│   │   └── error-handler.ts
+│   ├── schemas/
+│   │   ├── auth.schema.ts
+│   │   ├── task.schema.ts
+│   │   └── workspace.schema.ts
+│   ├── policies/
+│   │   ├── task.policy.ts
+│   │   └── workspace.policy.ts
+│   ├── services/
+│   │   ├── auth.service.ts
+│   │   ├── task.service.ts
+│   │   └── workspace.service.ts
+│   ├── repositories/
+│   │   ├── user.repository.ts
+│   │   ├── session.repository.ts
+│   │   └── task.repository.ts
+│   ├── db/
+│   │   ├── pool.ts
+│   │   └── transaction.ts
+│   ├── errors/
+│   │   └── app-error.ts
+│   └── lib/
+├── db/
+│   ├── migrations/
+│   └── seeds/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   ├── security/
+│   └── e2e/
+├── docs/
+│   ├── architecture.md
+│   ├── authentication.md
+│   ├── authorization-matrix.md
+│   ├── database-schema.md
+│   ├── sql-safety.md
+│   ├── threat-model.md
+│   └── openapi.yaml
+├── .env.example
+├── package.json
+└── README.md
+```
+
+Adapt the structure to the selected framework instead of forcing a particular directory layout. Preserve the separation between route handling, policies, business logic, and SQL.
+
