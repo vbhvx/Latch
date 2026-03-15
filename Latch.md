@@ -1141,3 +1141,27 @@ Adapt the structure to the selected framework instead of forcing a particular di
 
 **Exit criterion:** The application has an explicit security model and a reviewed database foundation.
 
+### Phase 2: PostgreSQL Foundation
+
+- Configure a controlled database connection pool.
+- Create migrations for the core tables.
+- Add constraints and indexes.
+- Implement parameterized SQL repositories.
+- Implement safe transaction helpers where appropriate.
+- Add schema and migration tests.
+- Provide a reproducible test database setup.
+
+**Exit criterion:** The application can perform safe SQL operations and preserve the defined data invariants.
+
+### Phase 3: Authentication and Sessions
+
+- Implement the selected authentication mechanism.
+- Add registration if required.
+- Implement login and logout.
+- Add session validation and invalidation.
+- Protect private endpoints.
+- Add authentication tests.
+- Verify secrets handling and session storage.
+
+**Exit criterion:** Protected endpoints reject unauthenticated and invalidly authenticated requests.
+
