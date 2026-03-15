@@ -1127,3 +1127,17 @@ secure-api-foundation/
 
 Adapt the structure to the selected framework instead of forcing a particular directory layout. Preserve the separation between route handling, policies, business logic, and SQL.
 
+## 18. Implementation Roadmap
+
+### Phase 1: Repository Inspection and Security Design
+
+- Inspect the existing codebase, dependencies, route structure, database setup, and scripts.
+- Document the trust boundaries.
+- Define the initial user and resource models.
+- Identify the required roles and permissions.
+- Choose the authentication approach.
+- Establish API response conventions.
+- Design the initial schema and migrations.
+
+**Exit criterion:** The application has an explicit security model and a reviewed database foundation.
+
