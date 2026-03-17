@@ -1165,3 +1165,38 @@ Adapt the structure to the selected framework instead of forcing a particular di
 
 **Exit criterion:** Protected endpoints reject unauthenticated and invalidly authenticated requests.
 
+### Phase 4: Authorization and Validation
+
+- Implement centralized authorization policies.
+- Add request schemas.
+- Enforce owner and workspace boundaries.
+- Prevent role and ownership manipulation.
+- Implement consistent error handling.
+- Add negative authorization tests.
+- Verify that denied requests leave the database unchanged.
+
+**Exit criterion:** Permissions and validation are enforced by the backend, independently of the frontend.
+
+### Phase 5: Resource API and Transactions
+
+- Implement resource creation, reading, updating, and deletion.
+- Add resource-scoped SQL queries.
+- Define transaction boundaries.
+- Add audit records for required operations.
+- Implement optimistic concurrency where needed.
+- Add database integration and conflict tests.
+
+**Exit criterion:** The API supports the core workflow without violating ownership, integrity, or transaction requirements.
+
+### Phase 6: Hardening and Optional RLS
+
+- Review SQL safety and dynamic query construction.
+- Test connection-pool behavior.
+- Introduce RLS if the chosen architecture supports it reliably.
+- Add rate limiting and operational logging.
+- Verify database least privilege.
+- Test authentication and authorization failure paths.
+- Document residual risks.
+
+**Exit criterion:** The implemented security controls have repeatable test evidence and documented limitations.
+
