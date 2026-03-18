@@ -1200,3 +1200,16 @@ Adapt the structure to the selected framework instead of forcing a particular di
 
 **Exit criterion:** The implemented security controls have repeatable test evidence and documented limitations.
 
+### Phase 7: Documentation and Release
+
+- Finalize the OpenAPI contract.
+- Document authentication and permission rules.
+- Write clean-environment setup instructions.
+- Run linting, type checking, migrations, builds, and all required tests.
+- Verify operational health checks.
+- Produce a final verification report.
+
+**Exit criterion:** Another developer can install, run, test, and extend the foundation using the documented process.
+
+## 19. Acceptance Criteria
+
