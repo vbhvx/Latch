@@ -1213,3 +1213,18 @@ Adapt the structure to the selected framework instead of forcing a particular di
 
 ## 19. Acceptance Criteria
 
+### Authentication
+
+- The chosen authentication mechanism works through the documented flow.
+- Invalid or expired sessions are rejected.
+- Logout invalidates the relevant session.
+- Secrets and password hashes are not exposed through ordinary endpoints.
+
+### Authorization
+
+- Every protected operation enforces its permission policy.
+- User-controlled IDs cannot bypass resource ownership checks.
+- Role escalation attempts are denied.
+- List, detail, search, and mutation endpoints enforce consistent access rules.
+- Unauthorized requests do not mutate the underlying data.
+
