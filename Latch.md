@@ -1228,3 +1228,20 @@ Adapt the structure to the selected framework instead of forcing a particular di
 - List, detail, search, and mutation endpoints enforce consistent access rules.
 - Unauthorized requests do not mutate the underlying data.
 
+### PostgreSQL
+
+- SQL values are parameterized.
+- Dynamic identifiers are allowlisted.
+- Constraints protect required invariants.
+- Transactions roll back incomplete multi-step operations.
+- Migrations are reproducible.
+- Integration tests exercise actual PostgreSQL behavior.
+
+### Validation and API contracts
+
+- All untrusted request inputs are validated on the server.
+- Unexpected privileged fields are rejected.
+- Success and error responses follow documented schemas.
+- HTTP status codes are consistent.
+- OpenAPI documentation reflects implemented behavior.
+
