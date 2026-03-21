@@ -1245,3 +1245,20 @@ Adapt the structure to the selected framework instead of forcing a particular di
 - HTTP status codes are consistent.
 - OpenAPI documentation reflects implemented behavior.
 
+### Reliability and maintainability
+
+- Query and business logic are separated from route handlers.
+- Errors are mapped safely and consistently.
+- Connections are managed through a controlled pool.
+- Concurrency-sensitive operations have defined behavior.
+- Logging does not expose secrets.
+- Tests cover critical security and data-integrity cases.
+
+### Documentation and delivery
+
+- The repository includes setup and testing instructions.
+- The authentication and authorization model is documented.
+- The database schema and constraints are documented.
+- Test results are based on commands actually executed.
+- Known gaps and unverified assumptions are disclosed.
+
