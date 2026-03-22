@@ -1262,3 +1262,60 @@ Adapt the structure to the selected framework instead of forcing a particular di
 - Test results are based on commands actually executed.
 - Known gaps and unverified assumptions are disclosed.
 
+## 20. README Requirements
+
+The README must include:
+
+- Project objective and supported functionality.
+- Architecture overview.
+- Technology stack.
+- Prerequisites.
+- Environment-variable reference.
+- PostgreSQL setup.
+- Database migration and seed commands.
+- Development and production commands.
+- API documentation location.
+- Authentication and session behavior.
+- Authorization model.
+- SQL safety rules.
+- Transaction strategy.
+- Testing commands.
+- Deployment instructions.
+- Known limitations.
+
+Include `.env.example` with placeholders. Never commit real database passwords, session secrets, or provider credentials.
+
+## 21. Final Verification Report
+
+At completion, produce a report containing:
+
+| Area | Required evidence |
+|---|---|
+| Authentication | Tested login, logout, and session invalidation |
+| Authorization | Permission matrix and positive/negative test results |
+| Validation | Covered schemas and rejected-input tests |
+| PostgreSQL | Schema, constraints, indexes, and migrations |
+| SQL safety | Parameterization and dynamic-query safeguards |
+| Transactions | Commit, rollback, and failure-recovery results |
+| API contracts | Implemented endpoints and documentation status |
+| Security | Findings and unresolved risks |
+| Test environment | Database setup and isolation verification |
+| Testing | Actual commands executed and results |
+| Deployment | Verified configuration and deployment status |
+| Final status | Ready for submission, blocked, or incomplete, with evidence |
+
+Clearly distinguish between tests that were executed, tests that exist but were not run, and features that remain unimplemented. Do not claim a security audit or full exploit resistance merely because the required automated tests pass.
+
+## Final Execution Instruction
+
+Inspect the existing repository before making changes. Preserve working functionality unless a change is necessary and justified.
+
+Build the backend in phases, establishing the security model, PostgreSQL schema, parameterized SQL layer, and authorization policies before implementing dependent business features.
+
+Every protected endpoint must authenticate and authorize the request. Every write operation must validate untrusted input. Every multi-step operation must have a defined transaction boundary. Every SQL query must safely handle user-controlled values. Every important invariant should be enforced through application rules, database constraints, or both.
+
+Use maintained authentication primitives rather than inventing cryptography. Do not treat frontend restrictions as security. Do not assume a correctly formed request is authorized, or that a successful HTTP response proves the database is consistent.
+
+Before declaring completion, execute the actual available linting, type-checking, build, migration, unit, integration, security, and end-to-end commands. Verify that unauthorized requests are denied and that denied operations leave protected data unchanged.
+
+Report failures and limitations honestly. The final deliverable must provide a secure, testable, maintainable foundation for building applications directly against PostgreSQL, with clear API contracts and security behavior that developers can understand, verify, and extend safely.
