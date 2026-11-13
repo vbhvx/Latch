@@ -10,6 +10,8 @@ export async function uiRoutes(app: FastifyInstance): Promise<void> {
   <meta name="page-type" content="software">
   <meta name="site-kind" content="software">
   <title>Latch — Security-First PostgreSQL Developer Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
   <style>
     :root {
       --bg: #090d16;
@@ -274,6 +276,21 @@ export async function uiRoutes(app: FastifyInstance): Promise<void> {
 </body>
 </html>`;
     return reply.status(200).type("text/html").send(html);
+  });
+
+  const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><defs><linearGradient id="lt-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#040711"/></linearGradient><linearGradient id="lt-border" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/><stop offset="100%" stop-color="#0369a1" stop-opacity="0.3"/></linearGradient><linearGradient id="lt-accent" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#0284c7"/></linearGradient><filter id="lt-glow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#38bdf8" flood-opacity="0.4"/></filter></defs><rect x="3" y="3" width="58" height="58" rx="16" fill="url(#lt-bg)" stroke="url(#lt-border)" stroke-width="1.5"/><g filter="url(#lt-glow)"><path d="M24 28 V22 C24 17.58 27.58 14 32 14 C36.42 14 40 17.58 40 22 V28" fill="none" stroke="url(#lt-accent)" stroke-width="4" stroke-linecap="round"/><rect x="20" y="28" width="24" height="20" rx="5" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/><circle cx="32" cy="36" r="2.5" fill="#ffffff"/><path d="M31 36.5 L30.5 42 H33.5 L33 36.5 Z" fill="#ffffff"/></g></svg>`;
+
+  const faviconIcoBuffer = Buffer.from(
+    "AAABAAEAICAAAAEAIACEAwAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAgAAAAIAgGAAAAc3p69AAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAABm2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42NDwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWURpbWVuc2lvbj42NDwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqbek1aAAABGElEQVRYCe3TP0sDMRzG8W/indijgpaKRaRXLOUUigiKDg6uDm7uDm4uLr4NRwcXJxEnfQHq4B8onKUubq7iIi6CoDR3+Xn1BXS7c8kzJpDnlw+JsiJyeffE9X2MsgabpiwutNjd3qQ06pF7Lm57UgmXpVSNpLKxI0G4IiNBTQ6PT7PR8o++enjk6/2NcnsVv1bHby2R9vt04zj3yw8KtBaLVmBmIibWt/CjNfB8VLZeRLRNDJKV2bEywdQsenwSlMImSRH9eO35JgZNenPG80sP+XiF70/qjbCQAdSPSeTo5Jxup/P3C1IrNJpzHOzvMV3NNHKOGrzznDuGHq+H7haw6QZwAk7ACTgBJ+AEnIATcAJO4N8FfgHTRrnwz5tC7QAAAABJRU5ErkJggg==",
+    "base64"
+  );
+
+  app.get("/favicon.svg", async (_request: FastifyRequest, reply: FastifyReply) => {
+    return reply.status(200).type("image/svg+xml").send(faviconSvg);
+  });
+
+  app.get("/favicon.ico", async (_request: FastifyRequest, reply: FastifyReply) => {
+    return reply.status(200).type("image/x-icon").send(faviconIcoBuffer);
   });
 }
 
