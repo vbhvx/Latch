@@ -43,4 +43,3 @@ describe("Integration: Health & Readiness Endpoints", () => {
     expect(body.connectionString).toBeUndefined();
   });
 });
-

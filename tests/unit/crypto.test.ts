@@ -47,4 +47,3 @@ describe("Unit: Crypto Utilities", () => {
     expect(hash1).not.toBe(token);
   });
 });
-

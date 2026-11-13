@@ -204,11 +204,7 @@ export const workspaceRepository = {
   /**
    * Update workspace details.
    */
-  async updateWorkspace(
-    db: Queryable,
-    workspaceId: string,
-    name: string
-  ): Promise<Workspace | null> {
+  async updateWorkspace(db: Queryable, workspaceId: string, name: string): Promise<Workspace | null> {
     const query = `
       UPDATE workspaces
       SET name = $1, updated_at = NOW()
@@ -232,4 +228,3 @@ export const workspaceRepository = {
     return res.rows.length > 0;
   },
 };
-

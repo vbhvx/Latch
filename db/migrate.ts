@@ -29,7 +29,7 @@ function loadMigrationFiles(): MigrationFile[] {
     const upIndex = content.indexOf("-- Up");
     const downIndex = content.indexOf("-- Down");
 
-    let upSql = "";
+    let upSql: string;
     let downSql = "";
 
     if (upIndex !== -1 && downIndex !== -1 && downIndex > upIndex) {
@@ -146,7 +146,7 @@ export async function runMigrations(
 }
 
 // CLI entry point
-if (process.argv[1] && process.argv[1].endsWith("migrate.ts")) {
+if (process.argv[1] && /migrate\.(ts|js)$/.test(process.argv[1])) {
   const actionArg = process.argv[2] as "up" | "down" | "status" | undefined;
   const action = actionArg === "down" ? "down" : actionArg === "status" ? "status" : "up";
   const isTestDb = process.argv.includes("--test");
@@ -165,4 +165,3 @@ if (process.argv[1] && process.argv[1].endsWith("migrate.ts")) {
       process.exit(1);
     });
 }
-

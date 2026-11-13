@@ -23,12 +23,7 @@ export const sessionRepository = {
    * Persist a new server-managed session.
    * Only the token hash is stored.
    */
-  async createSession(
-    db: Queryable,
-    userId: string,
-    tokenHash: string,
-    expiresAt: Date
-  ): Promise<Session> {
+  async createSession(db: Queryable, userId: string, tokenHash: string, expiresAt: Date): Promise<Session> {
     const query = `
       INSERT INTO sessions (user_id, token_hash, expires_at)
       VALUES ($1, $2, $3)
@@ -42,10 +37,7 @@ export const sessionRepository = {
    * Look up an active, non-expired, non-revoked session by its SHA-256 token hash.
    * Joins the active user.
    */
-  async findValidSessionByTokenHash(
-    db: Queryable,
-    tokenHash: string
-  ): Promise<SessionWithUser | null> {
+  async findValidSessionByTokenHash(db: Queryable, tokenHash: string): Promise<SessionWithUser | null> {
     const query = `
       SELECT
         s.id AS session_id,
@@ -144,4 +136,3 @@ export const sessionRepository = {
     return res.rowCount ?? 0;
   },
 };
-

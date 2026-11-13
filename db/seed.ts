@@ -4,6 +4,13 @@ import { hashPassword } from "../src/lib/crypto.js";
 import { withTransaction } from "../src/db/transaction.js";
 
 export async function seed(targetPool: pg.Pool) {
+  // Seeding truncates every table and creates accounts with a publicly known password.
+  if (env.NODE_ENV === "production") {
+    throw new Error(
+      "Refusing to seed: NODE_ENV=production. Seeding is destructive and for development only."
+    );
+  }
+
   console.log("🌱 Seeding database...");
 
   await withTransaction(targetPool, async (client) => {
@@ -11,7 +18,9 @@ export async function seed(targetPool: pg.Pool) {
     await client.query("SELECT set_config('app.bypass_rls', 'on', true)");
 
     // Clean existing data
-    await client.query("TRUNCATE audit_events, tasks, workspace_memberships, workspaces, sessions, users RESTART IDENTITY CASCADE");
+    await client.query(
+      "TRUNCATE audit_events, tasks, workspace_memberships, workspaces, sessions, users RESTART IDENTITY CASCADE"
+    );
 
     const defaultPasswordHash = await hashPassword("Password123!");
 
@@ -90,14 +99,24 @@ export async function seed(targetPool: pg.Pool) {
       `INSERT INTO tasks (workspace_id, owner_id, title, description, status, version)
        VALUES ($1, $2, $3, $4, 'in_progress', 1)
        RETURNING id`,
-      [engWs.id, alice.id, "Implement PostgreSQL connection pool", "Configure max connections, timeouts, and error listeners"]
+      [
+        engWs.id,
+        alice.id,
+        "Implement PostgreSQL connection pool",
+        "Configure max connections, timeouts, and error listeners",
+      ]
     );
 
     const task2 = await client.query(
       `INSERT INTO tasks (workspace_id, owner_id, title, description, status, version)
        VALUES ($1, $2, $3, $4, 'todo', 1)
        RETURNING id`,
-      [engWs.id, bob.id, "Write automated authorization test cases", "Cover positive and negative authorization matrix"]
+      [
+        engWs.id,
+        bob.id,
+        "Write automated authorization test cases",
+        "Cover positive and negative authorization matrix",
+      ]
     );
 
     // 5. Create Private Tasks
@@ -105,7 +124,12 @@ export async function seed(targetPool: pg.Pool) {
       `INSERT INTO tasks (workspace_id, owner_id, title, description, status, version)
        VALUES ($1, $2, $3, $4, 'todo', 1)
        RETURNING id`,
-      [alicePrivateWs.id, alice.id, "Alice confidential review", "Review quarterly compensation and performance"]
+      [
+        alicePrivateWs.id,
+        alice.id,
+        "Alice confidential review",
+        "Review quarterly compensation and performance",
+      ]
     );
 
     // 6. Record Audit Events

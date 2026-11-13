@@ -30,4 +30,3 @@ export async function healthRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 }
-

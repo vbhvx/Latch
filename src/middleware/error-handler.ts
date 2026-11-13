@@ -68,7 +68,35 @@ export function errorHandler(
     return reply.status(error.statusCode).send(response);
   }
 
-  // 3. PostgreSQL Known Errors (Sanitized)
+  // 3. Fastify client errors (malformed JSON, oversized body, unsupported media type, ...).
+  // Fastify codes are prefixed FST_ and must be checked before the Postgres branch, which
+  // also keys off `error.code`.
+  const fastifyErr = error as FastifyError;
+  if (
+    typeof fastifyErr.code === "string" &&
+    fastifyErr.code.startsWith("FST_") &&
+    typeof fastifyErr.statusCode === "number" &&
+    fastifyErr.statusCode >= 400 &&
+    fastifyErr.statusCode < 500 &&
+    fastifyErr.statusCode !== 429 &&
+    fastifyErr.statusCode !== 404
+  ) {
+    const codeByStatus: Record<number, string> = {
+      400: "BAD_REQUEST",
+      413: "PAYLOAD_TOO_LARGE",
+      415: "UNSUPPORTED_MEDIA_TYPE",
+    };
+    const response: ApiErrorResponse = {
+      error: {
+        code: codeByStatus[fastifyErr.statusCode] ?? "BAD_REQUEST",
+        message: fastifyErr.statusCode === 413 ? "Request body is too large." : fastifyErr.message,
+        requestId,
+      },
+    };
+    return reply.status(fastifyErr.statusCode).send(response);
+  }
+
+  // 4. PostgreSQL Known Errors (Sanitized)
   const pgErr = error as PostgresError;
   if (pgErr.code) {
     request.log.error(
@@ -140,7 +168,7 @@ export function errorHandler(
     }
   }
 
-  // 4. Fastify Rate Limit (429)
+  // 5. Fastify Rate Limit (429)
   if ("statusCode" in error && error.statusCode === 429) {
     const response: ApiErrorResponse = {
       error: {
@@ -152,7 +180,7 @@ export function errorHandler(
     return reply.status(429).send(response);
   }
 
-  // 5. Fastify 404 Route Not Found
+  // 6. Fastify 404 Route Not Found
   if ("statusCode" in error && error.statusCode === 404) {
     const response: ApiErrorResponse = {
       error: {
@@ -164,7 +192,7 @@ export function errorHandler(
     return reply.status(404).send(response);
   }
 
-  // 6. Generic Unhandled Internal Server Errors
+  // 7. Generic Unhandled Internal Server Errors
   request.log.error({ err: error, requestId }, "Unhandled internal server error");
 
   const response: ApiErrorResponse = {

@@ -22,17 +22,17 @@ describe("Unit: Dynamic Sorting Allowlist Safeguards", () => {
   });
 
   it("should reject malicious or unallowlisted sort fields with ValidationError", () => {
-    expect(() =>
-      getSafeSortColumn("password_hash", allowedSortColumns, "createdAt")
-    ).toThrow(ValidationError);
+    expect(() => getSafeSortColumn("password_hash", allowedSortColumns, "createdAt")).toThrow(
+      ValidationError
+    );
 
-    expect(() =>
-      getSafeSortColumn("title; DROP TABLE users; --", allowedSortColumns, "createdAt")
-    ).toThrow(ValidationError);
+    expect(() => getSafeSortColumn("title; DROP TABLE users; --", allowedSortColumns, "createdAt")).toThrow(
+      ValidationError
+    );
 
-    expect(() =>
-      getSafeSortColumn("(SELECT version())", allowedSortColumns, "createdAt")
-    ).toThrow(ValidationError);
+    expect(() => getSafeSortColumn("(SELECT version())", allowedSortColumns, "createdAt")).toThrow(
+      ValidationError
+    );
   });
 
   it("should safely validate sort order", () => {
@@ -45,4 +45,3 @@ describe("Unit: Dynamic Sorting Allowlist Safeguards", () => {
     expect(() => getSafeSortOrder("asc; SELECT 1")).toThrow(ValidationError);
   });
 });
-

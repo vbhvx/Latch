@@ -83,4 +83,3 @@ export class InternalServerError extends AppError {
     super(500, "INTERNAL_SERVER_ERROR", message, undefined, false);
   }
 }
-

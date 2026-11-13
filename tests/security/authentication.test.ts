@@ -226,4 +226,3 @@ describe("Security: Authentication & Session Lifecycle", () => {
     expect(loginRes.json().error.code).toBe("FORBIDDEN");
   });
 });
-

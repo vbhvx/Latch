@@ -44,3 +44,18 @@ describe("Integration: Error Handler & Sanitization", () => {
   });
 });
 
+describe("Integration: Fastify client errors are not reported as server errors", () => {
+  it("returns 400 BAD_REQUEST for malformed JSON", async () => {
+    const app = buildApp();
+    await app.ready();
+    const res = await app.inject({
+      method: "POST",
+      url: "/api/v1/auth/login",
+      headers: { "content-type": "application/json" },
+      payload: "{not json",
+    });
+    await app.close();
+    expect(res.statusCode).toBe(400);
+    expect(res.json().error.code).toBe("BAD_REQUEST");
+  });
+});

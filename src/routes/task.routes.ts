@@ -60,11 +60,7 @@ export async function taskRoutes(app: FastifyInstance): Promise<void> {
       preHandler: [validate({ params: taskParamsSchema, body: updateTaskSchema })],
     },
     async (request, reply) => {
-      const task = await taskService.updateTask(
-        request.user!,
-        request.params.taskId,
-        request.body
-      );
+      const task = await taskService.updateTask(request.user!, request.params.taskId, request.body);
       return reply.status(200).send({ task });
     }
   );

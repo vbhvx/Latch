@@ -36,4 +36,3 @@ export const taskPolicy = {
     return false;
   },
 };
-

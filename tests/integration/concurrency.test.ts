@@ -28,12 +28,9 @@ describe("Integration: Optimistic Concurrency Control (Version Checking)", () =>
     expect(task.version).toBe(1);
 
     // Update with expectedVersion = 1
-    const { task: updated, conflict } = await taskRepository.updateWithVersion(
-      pool,
-      task.id,
-      1,
-      { title: "Updated Title" }
-    );
+    const { task: updated, conflict } = await taskRepository.updateWithVersion(pool, task.id, 1, {
+      title: "Updated Title",
+    });
 
     expect(conflict).toBe(false);
     expect(updated?.version).toBe(2);
@@ -79,4 +76,3 @@ describe("Integration: Optimistic Concurrency Control (Version Checking)", () =>
     expect(latest?.version).toBe(2);
   });
 });
-

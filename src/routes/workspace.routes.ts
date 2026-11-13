@@ -131,11 +131,7 @@ export async function workspaceRoutes(app: FastifyInstance): Promise<void> {
       preHandler: [validate({ params: memberParamsSchema })],
     },
     async (request, reply) => {
-      await workspaceService.removeMember(
-        request.user!,
-        request.params.workspaceId,
-        request.params.userId
-      );
+      await workspaceService.removeMember(request.user!, request.params.workspaceId, request.params.userId);
       return reply.status(200).send({ message: "Member removed successfully." });
     }
   );
@@ -147,10 +143,7 @@ export async function workspaceRoutes(app: FastifyInstance): Promise<void> {
       preHandler: [validate({ params: workspaceParamsSchema })],
     },
     async (request, reply) => {
-      const result = await workspaceService.listAuditEvents(
-        request.user!,
-        request.params.workspaceId
-      );
+      const result = await workspaceService.listAuditEvents(request.user!, request.params.workspaceId);
       return reply.status(200).send(result);
     }
   );

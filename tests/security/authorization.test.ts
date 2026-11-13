@@ -148,7 +148,7 @@ describe("Security: Centralized Authorization & RBAC Boundaries", () => {
       expect(listRes.statusCode).toBe(200);
       const tasks = listRes.json().tasks;
       // Outsider should only see their own tasks, never tasks from Engineering Core
-      const leaked = tasks.some((t: any) => t.id === ownerTaskId);
+      const leaked = tasks.some((t: { id: string }) => t.id === ownerTaskId);
       expect(leaked).toBe(false);
     });
   });

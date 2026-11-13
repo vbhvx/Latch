@@ -94,4 +94,3 @@ export const userRepository = {
     return res.rows[0] || null;
   },
 };
-

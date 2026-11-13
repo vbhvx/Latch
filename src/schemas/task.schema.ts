@@ -27,12 +27,9 @@ export const updateTaskSchema = z
     version: z.number().int().min(1, "Expected task version is required for optimistic concurrency control"),
   })
   .strict()
-  .refine(
-    (data) => data.title !== undefined || data.description !== undefined || data.status !== undefined,
-    {
-      message: "At least one field (title, description, or status) must be provided to update",
-    }
-  );
+  .refine((data) => data.title !== undefined || data.description !== undefined || data.status !== undefined, {
+    message: "At least one field (title, description, or status) must be provided to update",
+  });
 
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 
@@ -49,4 +46,3 @@ export const listTasksQuerySchema = z
   .strict();
 
 export type ListTasksQuery = z.infer<typeof listTasksQuerySchema>;
-

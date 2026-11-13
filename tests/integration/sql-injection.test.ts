@@ -62,4 +62,3 @@ describe("Integration: Parameterized SQL & Injection Safeguards", () => {
     expect(tasks).toHaveLength(0);
   });
 });
-

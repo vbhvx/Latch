@@ -54,4 +54,3 @@ export const memberParamsSchema = z
   .strict();
 
 export type MemberParams = z.infer<typeof memberParamsSchema>;
-

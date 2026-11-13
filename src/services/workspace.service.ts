@@ -11,7 +11,11 @@ import {
   type WorkspaceRole,
   type UserWorkspaceSummary,
 } from "../repositories/workspace.repository.js";
-import type { AddMemberInput, CreateWorkspaceInput, UpdateWorkspaceInput } from "../schemas/workspace.schema.js";
+import type {
+  AddMemberInput,
+  CreateWorkspaceInput,
+  UpdateWorkspaceInput,
+} from "../schemas/workspace.schema.js";
 
 export const workspaceService = {
   /**
@@ -65,11 +69,7 @@ export const workspaceService = {
   /**
    * Update a workspace's name (Owner only).
    */
-  async updateWorkspace(
-    user: User,
-    workspaceId: string,
-    input: UpdateWorkspaceInput
-  ): Promise<Workspace> {
+  async updateWorkspace(user: User, workspaceId: string, input: UpdateWorkspaceInput): Promise<Workspace> {
     const membership = await workspaceRepository.findMembership(pool, workspaceId, user.id);
     if (!membership) {
       throw new NotFoundError("Workspace not found.");
@@ -142,11 +142,7 @@ export const workspaceService = {
   /**
    * Add a new member to a workspace (Owner only).
    */
-  async addMember(
-    user: User,
-    workspaceId: string,
-    input: AddMemberInput
-  ): Promise<WorkspaceMemberInfo> {
+  async addMember(user: User, workspaceId: string, input: AddMemberInput): Promise<WorkspaceMemberInfo> {
     const callerMembership = await workspaceRepository.findMembership(pool, workspaceId, user.id);
     if (!callerMembership) {
       throw new NotFoundError("Workspace not found.");
@@ -330,4 +326,3 @@ export const workspaceService = {
     return auditRepository.listByWorkspace(pool, workspaceId, limit, offset);
   },
 };
-

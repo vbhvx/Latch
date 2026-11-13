@@ -73,4 +73,3 @@ describe("Integration: Transaction Management & Atomic Rollback", () => {
     expect(tasksCount.rows[0].count).toBe(0);
   });
 });
-

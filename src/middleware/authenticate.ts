@@ -57,4 +57,3 @@ export async function authenticate(request: FastifyRequest, _reply: FastifyReply
   request.user = sessionUser.user;
   request.session = sessionUser.session;
 }
-

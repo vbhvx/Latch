@@ -57,4 +57,3 @@ export async function pingDatabase(targetPool: pg.Pool = pool): Promise<boolean>
     return false;
   }
 }
-

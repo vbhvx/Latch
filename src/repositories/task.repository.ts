@@ -87,10 +87,7 @@ export const taskRepository = {
   /**
    * List tasks matching parameterized filters.
    */
-  async findTasks(
-    db: Queryable,
-    options: TaskFilterOptions
-  ): Promise<{ tasks: Task[]; total: number }> {
+  async findTasks(db: Queryable, options: TaskFilterOptions): Promise<{ tasks: Task[]; total: number }> {
     const conditions: string[] = ["deleted_at IS NULL"];
     const params: unknown[] = [];
     let paramIndex = 1;
@@ -138,7 +135,7 @@ export const taskRepository = {
       FROM tasks
       WHERE ${whereClause}
       ORDER BY ${sortColumn} ${sortOrder.toUpperCase()}
-      LIMIT $${paramIndex++} OFFSET $${paramIndex++};
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1};
     `;
 
     const dataRes = await db.query(dataSql, queryParams);
@@ -181,7 +178,7 @@ export const taskRepository = {
       UPDATE tasks
       SET ${setClauses.join(", ")}
       WHERE id = $${pIdx++}
-        AND version = $${pIdx++}
+        AND version = $${pIdx}
         AND deleted_at IS NULL
       RETURNING id, workspace_id, owner_id, title, description, status, version, created_at, updated_at, deleted_at;
     `;
@@ -217,4 +214,3 @@ export const taskRepository = {
     return res.rows.length > 0;
   },
 };
-

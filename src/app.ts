@@ -1,22 +1,28 @@
 import crypto from "node:crypto";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
+import fastifyHelmet from "@fastify/helmet";
 import fastifyRateLimit from "@fastify/rate-limit";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
 import { env } from "./config/env.js";
+import { httpRequestDuration } from "./lib/metrics.js";
 import { getLoggerConfig } from "./lib/logger.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { authRoutes } from "./routes/auth.routes.js";
 import { healthRoutes } from "./routes/health.routes.js";
 import { taskRoutes } from "./routes/task.routes.js";
 import { workspaceRoutes } from "./routes/workspace.routes.js";
+import { metricsRoutes } from "./routes/metrics.routes.js";
 import { uiRoutes } from "./routes/ui.routes.js";
 
 export function buildApp(opts: FastifyServerOptions = {}): FastifyInstance {
   const app = fastify({
     logger: getLoggerConfig(),
+    trustProxy:
+      env.TRUST_PROXY_HOPS > 0 ? (_addr: string, hop: number) => hop <= env.TRUST_PROXY_HOPS : false,
+    bodyLimit: env.BODY_LIMIT_BYTES,
     genReqId(req) {
       const incoming = req.headers["x-request-id"];
       if (typeof incoming === "string" && incoming.trim().length > 0) {
@@ -26,6 +32,18 @@ export function buildApp(opts: FastifyServerOptions = {}): FastifyInstance {
     },
     ...opts,
   });
+
+  // Request latency histogram, labelled by route *template* (never the raw URL) to bound cardinality.
+  // Registered at the root so it observes every route, not just those in an encapsulated plugin.
+  if (env.ENABLE_METRICS) {
+    app.addHook("onResponse", async (request, reply) => {
+      const route = request.routeOptions?.url ?? "unmatched";
+      if (route === "/metrics") return;
+      httpRequestDuration
+        .labels(request.method, route, String(reply.statusCode))
+        .observe(reply.elapsedTime / 1000);
+    });
+  }
 
   // Centralized Error Handler
   app.setErrorHandler(errorHandler);
@@ -39,6 +57,22 @@ export function buildApp(opts: FastifyServerOptions = {}): FastifyInstance {
         requestId: request.id,
       },
     });
+  });
+
+  // Security headers. The landing page uses inline styles; Swagger UI needs inline scripts too.
+  app.register(fastifyHelmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+        upgradeInsecureRequests: null,
+      },
+    },
+    hsts: env.NODE_ENV === "production" ? { maxAge: 63_072_000, includeSubDomains: true } : false,
   });
 
   // CORS
@@ -56,7 +90,9 @@ export function buildApp(opts: FastifyServerOptions = {}): FastifyInstance {
   app.register(fastifyRateLimit, {
     max: env.RATE_LIMIT_MAX,
     timeWindow: env.RATE_LIMIT_WINDOW_MS,
-    allowList: ["127.0.0.1"],
+    // Loopback is only exempt outside production so health checks/tests are never throttled,
+    // while a misconfigured proxy cannot turn into a production rate-limit bypass.
+    allowList: env.NODE_ENV === "production" ? [] : ["127.0.0.1"],
   });
 
   // OpenAPI Swagger Documentation
@@ -94,17 +130,22 @@ export function buildApp(opts: FastifyServerOptions = {}): FastifyInstance {
     },
   });
 
-  app.register(fastifySwaggerUi, {
-    routePrefix: "/docs",
-    uiConfig: {
-      docExpansion: "list",
-      deepLinking: true,
-    },
-  });
+  if (env.ENABLE_DOCS) {
+    app.register(fastifySwaggerUi, {
+      routePrefix: "/docs",
+      uiConfig: {
+        docExpansion: "list",
+        deepLinking: true,
+      },
+    });
+  }
 
   // Register Routes
   app.register(uiRoutes);
   app.register(healthRoutes);
+  if (env.ENABLE_METRICS) {
+    app.register(metricsRoutes);
+  }
   app.register(authRoutes, { prefix: "/api/v1" });
   app.register(workspaceRoutes, { prefix: "/api/v1" });
   app.register(taskRoutes, { prefix: "/api/v1" });

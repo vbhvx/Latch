@@ -70,9 +70,7 @@ describe("Integration: PostgreSQL Database Constraints & Integrity", () => {
     await workspaceRepository.createMembership(pool, ws.id, user.id, "owner");
 
     // Attempt duplicate membership
-    await expect(
-      workspaceRepository.createMembership(pool, ws.id, user.id, "member")
-    ).rejects.toThrow();
+    await expect(workspaceRepository.createMembership(pool, ws.id, user.id, "member")).rejects.toThrow();
   });
 
   it("should enforce check constraints preventing blank workspace names and task titles", async () => {
@@ -91,11 +89,7 @@ describe("Integration: PostgreSQL Database Constraints & Integrity", () => {
 
     // Blank task title
     await expect(
-      pool.query(
-        `INSERT INTO tasks (workspace_id, owner_id, title) VALUES ($1, $2, '   ')`,
-        [ws.id, user.id]
-      )
+      pool.query(`INSERT INTO tasks (workspace_id, owner_id, title) VALUES ($1, $2, '   ')`, [ws.id, user.id])
     ).rejects.toThrow();
   });
 });
-

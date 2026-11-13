@@ -22,7 +22,9 @@ export function getSafeSortColumn<T extends Record<string, string>>(
     if (col) return col;
   }
 
-  throw new ValidationError(`Unsupported sort field: '${requestedField}'. Allowed fields: ${Object.keys(allowlist).join(", ")}`);
+  throw new ValidationError(
+    `Unsupported sort field: '${requestedField}'. Allowed fields: ${Object.keys(allowlist).join(", ")}`
+  );
 }
 
 /**
@@ -36,4 +38,3 @@ export function getSafeSortOrder(direction: string | undefined, defaultOrder: So
   }
   throw new ValidationError("Unsupported sort order. Allowed values: 'asc', 'desc'");
 }
-

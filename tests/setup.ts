@@ -24,4 +24,3 @@ beforeAll(async () => {
 afterAll(async () => {
   await closePool();
 });
-

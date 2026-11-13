@@ -8,7 +8,7 @@ export async function hashPassword(password: string): Promise<string> {
   return argon2.hash(password, {
     type: argon2.argon2id,
     memoryCost: 65536, // 64 MB
-    timeCost: 3,       // 3 iterations
+    timeCost: 3, // 3 iterations
     parallelism: 1,
   });
 }
@@ -39,4 +39,3 @@ export function generateSessionToken(): string {
 export function hashSessionToken(token: string): string {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
-

@@ -152,4 +152,3 @@ export const authService = {
     return userRepository.findById(pool, userId);
   },
 };
-

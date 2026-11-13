@@ -1,6 +1,7 @@
 import { buildApp } from "./app.js";
 import { env } from "./config/env.js";
 import { closePool, pingDatabase } from "./db/pool.js";
+import { startSessionCleanup } from "./jobs/session-cleanup.js";
 
 async function start() {
   const app = buildApp();
@@ -12,10 +13,21 @@ async function start() {
     process.exit(1);
   }
 
-  // Graceful shutdown handling
+  const stopSessionCleanup = startSessionCleanup(env.SESSION_CLEANUP_INTERVAL_MINUTES, app.log);
+
+  // Graceful shutdown handling: stop accepting work, drain in-flight requests, release the pool.
+  // A hard timeout guarantees the process exits even if a connection refuses to drain.
+  let shuttingDown = false;
   const shutdown = async (signal: string) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
     app.log.info({ signal }, "Received shutdown signal. Gracefully closing application...");
+    setTimeout(() => {
+      app.log.error("Graceful shutdown timed out. Forcing exit.");
+      process.exit(1);
+    }, env.SHUTDOWN_TIMEOUT_MS).unref();
     try {
+      stopSessionCleanup();
       await app.close();
       await closePool();
       app.log.info("HTTP server and database pool closed cleanly.");
@@ -28,12 +40,17 @@ async function start() {
 
   process.on("SIGINT", () => shutdown("SIGINT"));
   process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("unhandledRejection", (reason) => {
+    app.log.fatal({ err: reason }, "Unhandled promise rejection");
+    void shutdown("unhandledRejection");
+  });
 
   try {
     await app.listen({ port: env.PORT, host: env.HOST });
-    console.log(`\n🚀 Latch Secure API Server running at http://${env.HOST}:${env.PORT}`);
-    console.log(`📚 Interactive OpenAPI Swagger UI: http://${env.HOST}:${env.PORT}/docs`);
-    console.log(`🩺 Health status: http://${env.HOST}:${env.PORT}/health/readiness\n`);
+    app.log.info(
+      { docs: env.ENABLE_DOCS ? "/docs" : null, readiness: "/health/readiness" },
+      "Latch API ready"
+    );
   } catch (err) {
     app.log.error(err);
     process.exit(1);
@@ -41,4 +58,3 @@ async function start() {
 }
 
 start();
-

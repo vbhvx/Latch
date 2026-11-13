@@ -70,15 +70,22 @@ export async function uiRoutes(app: FastifyInstance): Promise<void> {
     .brand-mark {
       width: 32px;
       height: 32px;
-      background: #0284c7;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
-      font-family: var(--font-mono);
+      border-radius: 8px;
+      overflow: hidden;
+      filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.35));
+      transition: transform var(--m-out) var(--ease), filter var(--m-out) var(--ease);
+    }
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .brand:hover .brand-mark {
+      transform: scale(1.06);
+      filter: drop-shadow(0 4px 14px rgba(56, 189, 248, 0.55));
     }
     .brand-title {
       font-weight: 700;
@@ -215,7 +222,9 @@ export async function uiRoutes(app: FastifyInstance): Promise<void> {
   <header>
     <div class="wrap nav-inner">
       <a href="/" class="brand">
-        <div class="brand-mark">LT</div>
+        <div class="brand-mark">
+          <img src="/favicon.svg" alt="Latch Logo">
+        </div>
         <span class="brand-title">Latch Platform</span>
       </a>
       <div style="display: flex; align-items: center; gap: 16px;">
@@ -278,10 +287,91 @@ export async function uiRoutes(app: FastifyInstance): Promise<void> {
     return reply.status(200).type("text/html").send(html);
   });
 
-  const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><defs><linearGradient id="lt-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#040711"/></linearGradient><linearGradient id="lt-border" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/><stop offset="100%" stop-color="#0369a1" stop-opacity="0.3"/></linearGradient><linearGradient id="lt-accent" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#0284c7"/></linearGradient><filter id="lt-glow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#38bdf8" flood-opacity="0.4"/></filter></defs><rect x="3" y="3" width="58" height="58" rx="16" fill="url(#lt-bg)" stroke="url(#lt-border)" stroke-width="1.5"/><g filter="url(#lt-glow)"><path d="M24 28 V22 C24 17.58 27.58 14 32 14 C36.42 14 40 17.58 40 22 V28" fill="none" stroke="url(#lt-accent)" stroke-width="4" stroke-linecap="round"/><rect x="20" y="28" width="24" height="20" rx="5" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/><circle cx="32" cy="36" r="2.5" fill="#ffffff"/><path d="M31 36.5 L30.5 42 H33.5 L33 36.5 Z" fill="#ffffff"/></g></svg>`;
+  const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Background Gradient: Deep Obsidian Void -->
+    <linearGradient id="latch-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1224"/>
+      <stop offset="60%" stop-color="#060913"/>
+      <stop offset="100%" stop-color="#020307"/>
+    </linearGradient>
+
+    <!-- Outer Rim Stroke -->
+    <linearGradient id="latch-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.85"/>
+      <stop offset="45%" stop-color="#0284c7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Shackle Metallic Electric Azure -->
+    <linearGradient id="latch-shackle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="25%" stop-color="#38bdf8"/>
+      <stop offset="70%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+
+    <!-- Vault Chassis Body -->
+    <linearGradient id="latch-body" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#15213b"/>
+      <stop offset="40%" stop-color="#0e172a"/>
+      <stop offset="100%" stop-color="#080c17"/>
+    </linearGradient>
+
+    <!-- Cryptographic Neon Core Glow -->
+    <linearGradient id="latch-core" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+
+    <!-- Subtle Ambient Radial Spotlight behind Lock -->
+    <radialGradient id="latch-glow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#0284c7" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 1. Obsidian Glass Squircle Base -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#latch-bg)"/>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#latch-glow)"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="15.5" fill="none" stroke="url(#latch-rim)" stroke-width="1.25"/>
+
+  <!-- 2. Hardened Shackle (The Latch Arch) -->
+  <path d="M21.5 28 V19.5 C21.5 13.7 26.2 9 32 9 C37.8 9 42.5 13.7 42.5 19.5 V28"
+        fill="none" stroke="url(#latch-shackle)" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Shackle Inner Shadow / Depth Accent -->
+  <path d="M21.5 24 V19.5 C21.5 14.5 25.5 10.5 30.5 10"
+        fill="none" stroke="#bae6fd" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Shackle Specular Highlight (The Crown Glint) -->
+  <path d="M28 10.5 C29.3 9.8 30.6 9.5 32 9.5 C33.4 9.5 34.7 9.8 36 10.5"
+        fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity="0.95"/>
+
+  <!-- 3. Lower Vault Block (Lock Chassis) -->
+  <rect x="14" y="26" width="36" height="26" rx="7" fill="url(#latch-body)" stroke="#38bdf8" stroke-width="1.2" stroke-opacity="0.55"/>
+
+  <!-- High-Tech Machine Division Seam -->
+  <line x1="14" y1="32.5" x2="50" y2="32.5" stroke="#1e293b" stroke-width="1"/>
+  <line x1="22" y1="32.5" x2="42" y2="32.5" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.4"/>
+
+  <!-- Dual Precision Mechanical Rivets / Torx Pins -->
+  <circle cx="18.5" cy="30" r="1.2" fill="#38bdf8" opacity="0.8"/>
+  <circle cx="45.5" cy="30" r="1.2" fill="#38bdf8" opacity="0.8"/>
+
+  <!-- 4. Glowing Cryptographic Keyway / Latch Nexus -->
+  <circle cx="32" cy="38" r="3.2" fill="url(#latch-core)"/>
+  <path d="M30.6 39.5 L29.8 45.5 C29.7 46 30.1 46.5 30.7 46.5 H33.3 C33.9 46.5 34.3 46 34.2 45.5 L33.4 39.5 Z" fill="url(#latch-core)"/>
+  <circle cx="32" cy="38" r="1.2" fill="#ffffff"/>
+
+  <!-- 5. Active Security Latch Pulse Dot (Status: Locked & Verified) -->
+  <circle cx="32" cy="49" r="0.9" fill="#34d399"/>
+</svg>`;
 
   const faviconIcoBuffer = Buffer.from(
-    "AAABAAEAICAAAAEAIACEAwAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAgAAAAIAgGAAAAc3p69AAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAABm2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42NDwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWURpbWVuc2lvbj42NDwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqbek1aAAABGElEQVRYCe3TP0sDMRzG8W/indijgpaKRaRXLOUUigiKDg6uDm7uDm4uLr4NRwcXJxEnfQHq4B8onKUubq7iIi6CoDR3+Xn1BXS7c8kzJpDnlw+JsiJyeffE9X2MsgabpiwutNjd3qQ06pF7Lm57UgmXpVSNpLKxI0G4IiNBTQ6PT7PR8o++enjk6/2NcnsVv1bHby2R9vt04zj3yw8KtBaLVmBmIibWt/CjNfB8VLZeRLRNDJKV2bEywdQsenwSlMImSRH9eO35JgZNenPG80sP+XiF70/qjbCQAdSPSeTo5Jxup/P3C1IrNJpzHOzvMV3NNHKOGrzznDuGHq+H7haw6QZwAk7ACTgBJ+AEnIATcAJO4N8FfgHTRrnwz5tC7QAAAABJRU5ErkJggg==",
+    "AAABAAEAICAAAAEAIAAoEQAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////z7+v/7+/r/+vr6//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////X08v94b2n/Qzky/0I5NP8/NzL/R0JB/8XDwv//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////rqad/xUFAP8kFAb/KyUI/yQXBv8VCAD/RkA///39/f////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+Xi3z/JBID/yYTDP9bWyL/MiUS/ycVB/89NTH/+/v7/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////5uOff8nFAT/UDMV/0wzF/9NMRX/NyEJ/0A4M//7+/r/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////oZOA/xgHAP+RbCn/Ry4M/3RLB/8yHAD/PjQw//z8+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Wz8P/KRcK/1Y8Gv+Vdjz/dE8P/xECAP94b2n////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Wz8P/npF//6qbg/+aj37/rqad//b18///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
     "base64"
   );
 
@@ -293,4 +383,3 @@ export async function uiRoutes(app: FastifyInstance): Promise<void> {
     return reply.status(200).type("image/x-icon").send(faviconIcoBuffer);
   });
 }
-
