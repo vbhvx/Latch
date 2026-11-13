@@ -1,27 +1,82 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <linearGradient id="lt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#040711" />
+    <!-- Background Gradient: Deep Obsidian Void -->
+    <linearGradient id="latch-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1224"/>
+      <stop offset="60%" stop-color="#060913"/>
+      <stop offset="100%" stop-color="#020307"/>
     </linearGradient>
-    <linearGradient id="lt-border" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#0369a1" stop-opacity="0.3" />
+
+    <!-- Outer Rim Stroke -->
+    <linearGradient id="latch-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.85"/>
+      <stop offset="45%" stop-color="#0284c7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.2"/>
     </linearGradient>
-    <linearGradient id="lt-accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8" />
-      <stop offset="100%" stop-color="#0284c7" />
+
+    <!-- Shackle Metallic Electric Azure -->
+    <linearGradient id="latch-shackle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="25%" stop-color="#38bdf8"/>
+      <stop offset="70%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
     </linearGradient>
-    <filter id="lt-glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#38bdf8" flood-opacity="0.4" />
-    </filter>
+
+    <!-- Vault Chassis Body -->
+    <linearGradient id="latch-body" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#15213b"/>
+      <stop offset="40%" stop-color="#0e172a"/>
+      <stop offset="100%" stop-color="#080c17"/>
+    </linearGradient>
+
+    <!-- Cryptographic Neon Core Glow -->
+    <linearGradient id="latch-core" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+
+    <!-- Subtle Ambient Radial Spotlight behind Lock -->
+    <radialGradient id="latch-glow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#0284c7" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <rect x="3" y="3" width="58" height="58" rx="16" fill="url(#lt-bg)" stroke="url(#lt-border)" stroke-width="1.5" />
-  <g filter="url(#lt-glow)">
-    <path d="M24 28 V22 C24 17.58 27.58 14 32 14 C36.42 14 40 17.58 40 22 V28" 
-          fill="none" stroke="url(#lt-accent)" stroke-width="4" stroke-linecap="round" />
-    <rect x="20" y="28" width="24" height="20" rx="5" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5" />
-    <circle cx="32" cy="36" r="2.5" fill="#ffffff" />
-    <path d="M31 36.5 L30.5 42 H33.5 L33 36.5 Z" fill="#ffffff" />
-  </g>
+
+  <!-- 1. Obsidian Glass Squircle Base -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#latch-bg)"/>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#latch-glow)"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="15.5" fill="none" stroke="url(#latch-rim)" stroke-width="1.25"/>
+
+  <!-- 2. Hardened Shackle (The Latch Arch) -->
+  <path d="M21.5 28 V19.5 C21.5 13.7 26.2 9 32 9 C37.8 9 42.5 13.7 42.5 19.5 V28"
+        fill="none" stroke="url(#latch-shackle)" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Shackle Inner Shadow / Depth Accent -->
+  <path d="M21.5 24 V19.5 C21.5 14.5 25.5 10.5 30.5 10"
+        fill="none" stroke="#bae6fd" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Shackle Specular Highlight (The Crown Glint) -->
+  <path d="M28 10.5 C29.3 9.8 30.6 9.5 32 9.5 C33.4 9.5 34.7 9.8 36 10.5"
+        fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity="0.95"/>
+
+  <!-- 3. Lower Vault Block (Lock Chassis) -->
+  <rect x="14" y="26" width="36" height="26" rx="7" fill="url(#latch-body)" stroke="#38bdf8" stroke-width="1.2" stroke-opacity="0.55"/>
+
+  <!-- High-Tech Machine Division Seam -->
+  <line x1="14" y1="32.5" x2="50" y2="32.5" stroke="#1e293b" stroke-width="1"/>
+  <line x1="22" y1="32.5" x2="42" y2="32.5" stroke="#38bdf8" stroke-width="1" stroke-opacity="0.4"/>
+
+  <!-- Dual Precision Mechanical Rivets / Torx Pins -->
+  <circle cx="18.5" cy="30" r="1.2" fill="#38bdf8" opacity="0.8"/>
+  <circle cx="45.5" cy="30" r="1.2" fill="#38bdf8" opacity="0.8"/>
+
+  <!-- 4. Glowing Cryptographic Keyway / Latch Nexus -->
+  <circle cx="32" cy="38" r="3.2" fill="url(#latch-core)"/>
+  <path d="M30.6 39.5 L29.8 45.5 C29.7 46 30.1 46.5 30.7 46.5 H33.3 C33.9 46.5 34.3 46 34.2 45.5 L33.4 39.5 Z" fill="url(#latch-core)"/>
+  <circle cx="32" cy="38" r="1.2" fill="#ffffff"/>
+
+  <!-- 5. Active Security Latch Pulse Dot (Status: Locked & Verified) -->
+  <circle cx="32" cy="49" r="0.9" fill="#34d399"/>
 </svg>

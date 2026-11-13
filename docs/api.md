@@ -14,10 +14,12 @@
 ## 2. Authentication
 
 Requests requiring authentication accept either:
+
 1. `Authorization: Bearer <session_token>` header.
 2. `latch_session` cookie (automatically managed for browser clients).
 
 Unauthenticated requests to protected endpoints return:
+
 ```json
 {
   "error": {
@@ -33,6 +35,7 @@ Unauthenticated requests to protected endpoints return:
 ## 3. Standard Error Envelope
 
 All API errors follow the unified schema:
+
 ```json
 {
   "error": {
@@ -51,15 +54,16 @@ All API errors follow the unified schema:
 ```
 
 ### Common Error Codes
-| HTTP Status | Error Code | Description |
-|:---:|---|---|
-| `400` | `VALIDATION_ERROR` | Schema validation failure, unrecognized payload key, or constraint violation. |
-| `401` | `UNAUTHENTICATED` | Missing, expired, or invalid session token. |
-| `403` | `FORBIDDEN` | Insufficient role permissions or deactivated user account. |
-| `404` | `NOT_FOUND` | Resource does not exist or caller does not belong to the parent workspace. |
-| `409` | `CONFLICT` | Optimistic locking version conflict, unique constraint collision, or sole owner invariant. |
-| `429` | `RATE_LIMIT_EXCEEDED` | Request rate exceeded allowed quota. |
-| `500` | `INTERNAL_SERVER_ERROR` | Unhandled internal server error (sanitized, internal details hidden). |
+
+| HTTP Status | Error Code              | Description                                                                                |
+| :---------: | ----------------------- | ------------------------------------------------------------------------------------------ |
+|    `400`    | `VALIDATION_ERROR`      | Schema validation failure, unrecognized payload key, or constraint violation.              |
+|    `401`    | `UNAUTHENTICATED`       | Missing, expired, or invalid session token.                                                |
+|    `403`    | `FORBIDDEN`             | Insufficient role permissions or deactivated user account.                                 |
+|    `404`    | `NOT_FOUND`             | Resource does not exist or caller does not belong to the parent workspace.                 |
+|    `409`    | `CONFLICT`              | Optimistic locking version conflict, unique constraint collision, or sole owner invariant. |
+|    `429`    | `RATE_LIMIT_EXCEEDED`   | Request rate exceeded allowed quota.                                                       |
+|    `500`    | `INTERNAL_SERVER_ERROR` | Unhandled internal server error (sanitized, internal details hidden).                      |
 
 ---
 
@@ -68,7 +72,9 @@ All API errors follow the unified schema:
 ### 4.1 Authentication & Profile
 
 #### `POST /api/v1/auth/register`
+
 Create a new user account, initialize personal workspace, and issue session.
+
 - **Request Body:**
   ```json
   {
@@ -83,7 +89,9 @@ Create a new user account, initialize personal workspace, and issue session.
   - `409 Conflict`: Email already registered.
 
 #### `POST /api/v1/auth/login`
+
 Authenticate with email and password.
+
 - **Request Body:**
   ```json
   {
@@ -97,12 +105,16 @@ Authenticate with email and password.
   - `403 Forbidden`: Account suspended/deactivated.
 
 #### `POST /api/v1/auth/logout`
+
 Revoke the current session token and clear cookies.
+
 - **Responses:**
   - `200 OK`: `{ "message": "Logged out successfully" }`
 
 #### `GET /api/v1/me`
+
 Retrieve profile of authenticated user.
+
 - **Responses:**
   - `200 OK`: `{ "user": { "id": "...", "email": "...", "display_name": "...", "status": "active" } }`
 
@@ -111,36 +123,48 @@ Retrieve profile of authenticated user.
 ### 4.2 Workspaces
 
 #### `GET /api/v1/workspaces`
+
 List all workspaces accessible to the authenticated user along with their role (`owner`, `member`, `viewer`).
 
 #### `POST /api/v1/workspaces`
+
 Create a new shared workspace. The creator is assigned role `owner`.
+
 - **Request Body:** `{ "name": "Engineering Team" }`
 - **Responses:** `201 Created`
 
 #### `GET /api/v1/workspaces/:workspaceId`
+
 Retrieve details of a workspace. Returns `404` if caller is not a member.
 
 #### `PATCH /api/v1/workspaces/:workspaceId`
+
 Update workspace name. Restricted to `owner`.
 
 #### `DELETE /api/v1/workspaces/:workspaceId`
+
 Delete workspace and cascade delete all its tasks and memberships. Restricted to `owner`.
 
 #### `GET /api/v1/workspaces/:workspaceId/members`
+
 List all members in the workspace.
 
 #### `POST /api/v1/workspaces/:workspaceId/members`
+
 Add a user to the workspace. Restricted to `owner`.
+
 - **Request Body:** `{ "email": "colleague@example.com", "role": "member" }`
 
 #### `PATCH /api/v1/workspaces/:workspaceId/members/:userId`
+
 Update a member's role (`owner`, `member`, `viewer`). Restricted to `owner`. Cannot demote sole owner.
 
 #### `DELETE /api/v1/workspaces/:workspaceId/members/:userId`
+
 Remove a member from the workspace. Restricted to `owner`. Cannot remove sole owner.
 
 #### `GET /api/v1/workspaces/:workspaceId/audit-events`
+
 List audit events for the workspace. Restricted to `owner`.
 
 ---
@@ -148,7 +172,9 @@ List audit events for the workspace. Restricted to `owner`.
 ### 4.3 Tasks
 
 #### `GET /api/v1/tasks`
+
 List tasks accessible to the caller.
+
 - **Query Parameters:**
   - `workspaceId` (optional UUID): Filter to specific workspace.
   - `status` (optional): `todo` | `in_progress` | `done`.
@@ -159,7 +185,9 @@ List tasks accessible to the caller.
   - `offset` (optional integer): default `0`.
 
 #### `POST /api/v1/tasks`
+
 Create a task within a workspace. Restricted to `owner` and `member`. Viewers receive `403`.
+
 - **Request Body:**
   ```json
   {
@@ -171,10 +199,13 @@ Create a task within a workspace. Restricted to `owner` and `member`. Viewers re
   ```
 
 #### `GET /api/v1/tasks/:taskId`
+
 Retrieve task detail. Returns `404` if task is deleted or caller does not belong to the workspace.
 
 #### `PATCH /api/v1/tasks/:taskId`
+
 Update permitted fields with **Optimistic Concurrency Control**. Restricted to `owner` and `member`.
+
 - **Request Body:**
   ```json
   {
@@ -188,7 +219,8 @@ Update permitted fields with **Optimistic Concurrency Control**. Restricted to `
   - `409 Conflict`: Task was modified by another request (`VERSION_CONFLICT`).
 
 #### `DELETE /api/v1/tasks/:taskId`
+
 Soft-delete task (`deleted_at = NOW()`).
+
 - Allowed for: Workspace `owner` or task creator (`member`).
 - Denied for: Viewers (`403`) or non-creator members (`403`).
-

@@ -26,4 +26,3 @@
   "include": ["src/**/*", "tests/**/*", "db/**/*"],
   "exclude": ["node_modules", "dist"]
 }
-
