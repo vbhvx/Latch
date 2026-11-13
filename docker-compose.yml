@@ -1,4 +1,15 @@
-version: "3.8"
+# Local production-like stack: Postgres + one-shot migrations + the API.
+#   export SESSION_SECRET=$(openssl rand -hex 32)
+#   docker compose up --build
+# For day-to-day development use `docker compose up -d postgres` and `npm run dev`.
+
+x-api-env: &api-env
+  NODE_ENV: production
+  HOST: 0.0.0.0
+  PORT: 3000
+  SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET, e.g. export SESSION_SECRET=$(openssl rand -hex 32)}
+  COOKIE_SECURE: "true"
+  CORS_ORIGIN: http://localhost:3000
 
 services:
   postgres:
@@ -20,6 +31,30 @@ services:
       timeout: 5s
       retries: 5
 
+  # Applies schema migrations as the admin role, then exits.
+  migrate:
+    build: .
+    environment:
+      <<: *api-env
+      DATABASE_URL: postgresql://latch_admin:latch_admin_password@postgres:5432/latch_dev
+    command: ["node", "dist/db/migrate.js", "up"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Runs as the restricted latch_app role so row-level security is actually enforced.
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *api-env
+      DATABASE_URL: postgresql://latch_app:latch_app_password@postgres:5432/latch_dev
+      TRUST_PROXY_HOPS: 0
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
 volumes:
   postgres_data:
-
