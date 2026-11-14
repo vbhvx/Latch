@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # ---- build: install all deps and compile TypeScript ----
-FROM node:22-alpine AS build
+FROM node:25-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -13,7 +13,7 @@ RUN npm run build \
     && npm prune --omit=dev
 
 # ---- runtime: production deps + compiled output only, non-root ----
-FROM node:22-alpine AS runtime
+FROM node:25-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 RUN apk add --no-cache tini
