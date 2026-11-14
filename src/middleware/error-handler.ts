@@ -20,7 +20,7 @@ export function errorHandler(
   if (error instanceof ZodError) {
     const details: ErrorDetail[] = error.issues.map((issue) => {
       const field = issue.path.join(".");
-      const issueObj = issue as unknown as { code: string; received?: string };
+      const issueObj = issue as unknown as { code: string };
       let code = issueObj.code.toUpperCase();
 
       if (issue.code === "too_small") {
@@ -28,7 +28,8 @@ export function errorHandler(
       } else if (issue.code === "too_big") {
         code = "TOO_LONG";
       } else if (issue.code === "invalid_type") {
-        code = issueObj.received === "undefined" ? "REQUIRED" : "INVALID_TYPE";
+        // Zod 4 no longer exposes `received`; a missing value is reported in the message.
+        code = /received undefined$/.test(issue.message) ? "REQUIRED" : "INVALID_TYPE";
       }
 
       return {

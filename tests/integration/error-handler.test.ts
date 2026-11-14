@@ -59,3 +59,22 @@ describe("Integration: Fastify client errors are not reported as server errors",
     expect(res.json().error.code).toBe("BAD_REQUEST");
   });
 });
+
+describe("Integration: validation error codes", () => {
+  it("distinguishes missing fields (REQUIRED) from wrong types (INVALID_TYPE)", async () => {
+    const app = buildApp();
+    await app.ready();
+    const res = await app.inject({
+      method: "POST",
+      url: "/api/v1/auth/register",
+      payload: { email: "a@b.co", displayName: 123 },
+    });
+    await app.close();
+    expect(res.statusCode).toBe(400);
+    const byField = Object.fromEntries(
+      res.json().error.details.map((d: { field: string; code: string }) => [d.field, d.code])
+    );
+    expect(byField.password).toBe("REQUIRED");
+    expect(byField.displayName).toBe("INVALID_TYPE");
+  });
+});
