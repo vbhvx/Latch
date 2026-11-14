@@ -23,3 +23,8 @@ Thumbs.db
 coverage/
 .nyc_output/
 
+
+# Local AI-tooling assets
+.agents/
+.taste-skill/
+skills-lock.json
