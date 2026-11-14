@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, beforeEach } from "vitest";
 import { pool } from "../../src/db/pool.js";
 import { withTransaction } from "../../src/db/transaction.js";
 import { resetTestDatabase } from "../setup.js";
@@ -6,6 +6,19 @@ import { userRepository } from "../../src/repositories/user.repository.js";
 import { workspaceRepository } from "../../src/repositories/workspace.repository.js";
 
 describe("Security: PostgreSQL Row-Level Security (RLS) Defense-in-Depth", () => {
+  // The test must not depend on out-of-band DB setup: provision the least-privilege role itself.
+  beforeAll(async () => {
+    await pool.query(`
+      DO $$ BEGIN
+        IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'latch_app') THEN
+          CREATE ROLE latch_app NOSUPERUSER NOBYPASSRLS NOLOGIN;
+        END IF;
+      END $$;
+    `);
+    await pool.query("GRANT USAGE ON SCHEMA public TO latch_app");
+    await pool.query("GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO latch_app");
+  });
+
   beforeEach(async () => {
     await resetTestDatabase();
   });
