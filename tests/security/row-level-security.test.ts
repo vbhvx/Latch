@@ -61,7 +61,7 @@ describe("Security: PostgreSQL Row-Level Security (RLS) Defense-in-Depth", () =>
     const readUserA = await withTransaction(
       pool,
       async (client) => {
-        await client.query("SET ROLE latch_app");
+        await client.query("SET LOCAL ROLE latch_app");
         const res = await client.query("SELECT id, title FROM tasks WHERE id = $1", [taskId]);
         return res.rows;
       },
@@ -75,7 +75,7 @@ describe("Security: PostgreSQL Row-Level Security (RLS) Defense-in-Depth", () =>
     const readUserB = await withTransaction(
       pool,
       async (client) => {
-        await client.query("SET ROLE latch_app");
+        await client.query("SET LOCAL ROLE latch_app");
         const res = await client.query("SELECT id, title FROM tasks WHERE id = $1", [taskId]);
         return res.rows;
       },
