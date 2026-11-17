@@ -3,5 +3,7 @@ coverage
 node_modules
 package-lock.json
 public
+.agents
+.taste-skill
 Latch.md
 docs/openapi.yaml
